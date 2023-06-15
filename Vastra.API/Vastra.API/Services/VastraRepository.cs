@@ -1,0 +1,217 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Vastra.API.DBContexts;
+using Vastra.API.Entities;
+
+namespace Vastra.API.Services
+{
+    public class VastraRepository : IVastraRepository
+    {
+        private readonly VastraContext _context;
+
+        public VastraRepository(VastraContext context)
+        {
+            _context = context;
+        }
+        public async Task AddAddressForUserAsync(int userId, Address address)
+        {
+            var user = await GetUserAsync(userId);
+            if (user != null)
+            {
+                user.Addresses.Add(address);
+            }
+        }
+
+        public async Task AddCartItemForOrderAsync(int orderId, CartItem cartItem)
+        {
+            var order = await GetOrderAsync(orderId);
+            if (order != null) { 
+                order.CartItems.Add(cartItem);
+            }
+        }
+
+        public async Task AddCategoryAsync(Category category)
+        {
+            await _context.Categories.AddAsync(category);
+        }
+
+        public async Task AddChildCategoryForCategoryAsync(int categoryId, Category category)
+        {
+            var parentCategory = await GetCategoryAsync(categoryId);
+            if (parentCategory != null)
+            {
+                parentCategory.ChildCategories.Add(category);
+            }
+
+        }
+
+        public async Task AddOrderAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+        }
+
+        public async Task AddOrderForUserAsync(int userId, Order order)
+        {
+            var user = await GetUserAsync(userId);
+            if (user != null)
+            {
+                user.Orders.Add(order);
+            }
+        }
+
+        public async Task AddProductAsync(Product product)
+        {
+            await _context.Products.AddAsync(product);
+        }
+
+        public async Task AddRoleAsync(Role role)
+        {
+            await _context.Roles.AddAsync(role);
+        }
+
+        public async Task AddUser(User user)
+        {
+            await _context.Users.AddAsync(user);
+        }
+
+        public void DeleteAddress(Address address)
+        {
+            _context.Addresses.Remove(address);
+        }
+
+        public void DeleteCartItem(CartItem cartItem)
+        {
+            _context.CartItems.Remove(cartItem);
+        }
+
+        public void DeleteCategory(Category category)
+        {
+            _context.Categories.Remove(category);
+        }
+
+        public void DeleteOrder(Order order)
+        {
+            _context.Orders.Remove(order);
+        }
+
+        public void DeleteProduct(Product product)
+        {
+            _context.Products.Remove(product);
+        }
+
+        public void DeleteRole(Role role)
+        {
+            _context.Roles.Remove(role);
+        }
+
+        public void DeleteUser(User user)
+        {
+            _context.Users.Remove(user);
+        }
+
+        public async Task<IEnumerable<Address>> GetAddressesForUserAsync(int userId)
+        {
+            return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
+        }
+
+        public Task<IEnumerable<CartItem>> GetCartItemsForOrderAsync(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Category> GetCategoryAsync(int categoryId, bool includeChildCategories = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Category>> GetChildCategoriesForCategoryAsync(int categoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Order> GetOrderAsync(int orderId, bool includeCartItems = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Order>> GetOrdersAsync(int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Order>> GetOrdersForUserAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Product> GetProductAsync(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Role> GetRoleAsync(int roleId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAddressForUserAsync(int userId, Address address)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<CartItem>> UpdateCartItemForOrderAsync(int orderId, CartItem cartItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdatecategoryAsync(Category category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateOrderAsync(Order order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateProductAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<bool> SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
