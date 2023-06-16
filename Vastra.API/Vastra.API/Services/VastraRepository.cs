@@ -113,6 +113,20 @@ namespace Vastra.API.Services
             return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
         }
 
+        public async Task<Address?> GetAddressForUserAsync(int userId, int addressId)
+        {
+            return await _context.Addresses
+                .Where(a => a.UserId == userId && a.AddressId == addressId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId)
+        {
+            return await _context.CartItems
+                .Where(c => c.OrderId == orderId && c.CartItemId == cartItemId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId)
         {
             return await _context.CartItems.Where(c => c.OrderId == orderId).ToListAsync();
@@ -147,6 +161,17 @@ namespace Vastra.API.Services
             return await _context.Categories.Where(c => c.CategoryId == categoryId).Select(c => c.ChildCategories).FirstOrDefaultAsync();
         }
 
+        public async Task<Category?> GetChildCategoryForCategoryAsync(int categoryId, int childCategoryId)
+        {
+            var childCategories = _context.Categories
+                .Where(c => c.CategoryId == categoryId)
+                .Select(c => c.ChildCategories) as IQueryable<Category>;
+            if(childCategories != null)
+            return await childCategories.Where(c => c.CategoryId == childCategoryId).FirstOrDefaultAsync();
+
+            return null;
+        }
+
         public async Task<Order?> GetOrderAsync(int orderId, bool includeCartItems = false)
         {
             if (includeCartItems)
@@ -154,6 +179,14 @@ namespace Vastra.API.Services
                 return await _context.Orders.Include(o => o.CartItems).Where(o => o.OrderId == orderId).FirstOrDefaultAsync(); 
             }
             return await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
+        }
+
+        public async Task<Order?> GetOrderForUserAsync(int userId, int orderId)
+        {
+            return await _context.Orders
+                .Where(o => o.OrderId == orderId && o.UserId == userId)
+                .FirstOrDefaultAsync();
+                 
         }
 
         public async Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersAsync(int pageNumber, int pageSize)
@@ -264,22 +297,45 @@ namespace Vastra.API.Services
             }
         }
 
-        public Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        {
+            var collection = _context.Users as IQueryable<User>;
+            if (!string.IsNullOrEmpty(name))
+            {
+                collection = collection.Where(u => u.FirstName.Equals(name) || (u.LastName != null && u.LastName.Equals(name)));
+            }
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                collection = collection.Where(u => u.FirstName.Contains(searchQuery) 
+                || (u.LastName != null && u.LastName.Contains(searchQuery))
+                || (u.EmailId != null && u.EmailId.Contains(searchQuery)));
+            }
+            var totalPageSize = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalPageSize, pageSize, pageNumber);
+
+            var collectionToReturn = await collection.OrderBy(u => u.FirstName)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
+        }
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync() >= 0);
+        }
+
+        public Task UpdateAddressForUserAsync(int userId, int addressId, Address address)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateAddressForUserAsync(int userId, Address address)
+        public Task<IEnumerable<CartItem>> UpdateCartItemForOrderAsync(int orderId, int cartItemId, CartItem cartItem)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<CartItem>> UpdateCartItemForOrderAsync(int orderId, CartItem cartItem)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdatecategoryAsync(Category category)
+        public Task UpdateCategoryAsync(Category category)
         {
             throw new NotImplementedException();
         }
@@ -295,12 +351,6 @@ namespace Vastra.API.Services
         }
 
         public Task UpdateUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Task<bool> SaveChangesAsync()
         {
             throw new NotImplementedException();
         }

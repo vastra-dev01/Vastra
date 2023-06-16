@@ -10,7 +10,9 @@ namespace Vastra.API.Services
         Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false);
         Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false);
         Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId);
+        Task<Address?> GetAddressForUserAsync(int userId, int addressId);
         Task<IEnumerable<Order>?> GetOrdersForUserAsync(int userId);
+        Task<Order?> GetOrderForUserAsync(int userId, int orderId);
         Task AddOrderForUserAsync(int userId, Order order);
         Task AddAddressForUserAsync(int userId, Address address);
         Task AddUser(User user);
@@ -41,7 +43,8 @@ namespace Vastra.API.Services
 
         Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersAsync(int pageNumber, int pageSize);
         Task<Order?> GetOrderAsync(int orderId, bool includeCartItems = false);
-        Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId);//
+        Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId);
+        Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId);
         Task AddCartItemForOrderAsync(int orderId, CartItem cartItem);
         Task AddOrderAsync(Order order);
         Task UpdateOrderAsync(Order order);
@@ -56,9 +59,10 @@ namespace Vastra.API.Services
         Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize);
         Task<Category?> GetCategoryAsync(int categoryId, bool includeChildCategories = false);
         Task<IEnumerable<Category>?> GetChildCategoriesForCategoryAsync(int categoryId);
+        Task<Category?> GetChildCategoryForCategoryAsync(int categoryId, int childCategoryId);
         Task AddChildCategoryForCategoryAsync(int categoryId, Category category);
         Task AddCategoryAsync(Category category);
-        Task UpdatecategoryAsync(Category category);
+        Task UpdateCategoryAsync(Category category);
         void DeleteCategory(Category category);
 
 
@@ -66,7 +70,7 @@ namespace Vastra.API.Services
 
         #region CartItem
 
-        Task<IEnumerable<CartItem>> UpdateCartItemForOrderAsync(int orderId, CartItem cartItem);
+        Task<IEnumerable<CartItem>> UpdateCartItemForOrderAsync(int orderId, int cartItemId, CartItem cartItem);
         void DeleteCartItem(CartItem cartItem);
 
 
@@ -74,7 +78,7 @@ namespace Vastra.API.Services
 
         #region Address
 
-        Task UpdateAddressForUserAsync(int userId, Address address);
+        Task UpdateAddressForUserAsync(int userId, int addressId, Address address);
         void DeleteAddress(Address address);
 
         #endregion Address
