@@ -108,69 +108,160 @@ namespace Vastra.API.Services
             _context.Users.Remove(user);
         }
 
-        public async Task<IEnumerable<Address>> GetAddressesForUserAsync(int userId)
+        public async Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId)
         {
             return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
         }
 
-        public Task<IEnumerable<CartItem>> GetCartItemsForOrderAsync(int orderId)
+        public async Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId)
         {
-            throw new NotImplementedException();
+            return await _context.CartItems.Where(c => c.OrderId == orderId).ToListAsync();
         }
 
-        public Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            var collection = _context.Categories as IQueryable<Category>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+
+            var collectionToReturn = await collection.OrderBy(c => c.CategoryName)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
-        public Task<Category> GetCategoryAsync(int categoryId, bool includeChildCategories = false)
+        public async Task<Category?> GetCategoryAsync(int categoryId, bool includeChildCategories = false)
         {
-            throw new NotImplementedException();
+            if (includeChildCategories)
+            {
+                return await _context.Categories.Include(c => c.ChildCategories)
+                    .Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
+            }
+            return await _context.Categories.Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
         }
 
-        public Task<IEnumerable<Category>> GetChildCategoriesForCategoryAsync(int categoryId)
+        public async Task<IEnumerable<Category>?> GetChildCategoriesForCategoryAsync(int categoryId)
         {
-            throw new NotImplementedException();
+            return await _context.Categories.Where(c => c.CategoryId == categoryId).Select(c => c.ChildCategories).FirstOrDefaultAsync();
         }
 
-        public Task<Order> GetOrderAsync(int orderId, bool includeCartItems = false)
+        public async Task<Order?> GetOrderAsync(int orderId, bool includeCartItems = false)
         {
-            throw new NotImplementedException();
+            if (includeCartItems)
+            {
+                return await _context.Orders.Include(o => o.CartItems).Where(o => o.OrderId == orderId).FirstOrDefaultAsync(); 
+            }
+            return await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
         }
 
-        public Task<IEnumerable<Order>> GetOrdersAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            var collection = _context.Orders as IQueryable<Order>;
+            var totalPageSize = await collection.CountAsync();
+
+            var paginationMetadata = new PaginationMetadata(totalPageSize, pageSize, pageNumber);
+
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified) 
+                .Skip(pageSize * ( pageNumber - 1) )
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
-        public Task<IEnumerable<Order>> GetOrdersForUserAsync(int userId)
+        public async Task<IEnumerable<Order>?> GetOrdersForUserAsync(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Orders.Where(o => o.UserId == userId).ToListAsync();
         }
 
-        public Task<Product> GetProductAsync(int productId)
+        public async Task<Product?> GetProductAsync(int productId)
         {
-            throw new NotImplementedException();
+            return await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
-        public Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            var collection = _context.Products as IQueryable<Product>;
+            if (!string.IsNullOrEmpty(name))
+            {
+                name = name.Trim();
+                collection = collection.Where(p => p.Name == name);
+            }
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(c => c.Name.Contains(searchQuery)
+                || (c.Description != null && c.Description.Contains(searchQuery)));
+            }
+
+            var totalPageCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalPageCount, pageSize, pageNumber);
+            var collectionToReturn = await collection.OrderBy(p => p.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionToReturn, paginationMetadata);
+
         }
 
-        public Task<Role> GetRoleAsync(int roleId)
+        public async Task<Role?> GetRoleAsync(int roleId)
         {
-            throw new NotImplementedException();
+            return await _context.Roles.Where(r => r.RoleId == roleId).FirstOrDefaultAsync();
         }
 
-        public Task<User> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false)
+        public async Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false)
         {
-            throw new NotImplementedException();
+            if(includeAddresses && includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Include(u => u.Addresses)
+                        .Where(u => u.UserId == userId).FirstOrDefaultAsync();
+            }
+            else if(includeAddresses) {
+                return await _context.Users
+                        .Include(u => u.Addresses)
+                        .Where(u => u.UserId == userId).FirstOrDefaultAsync();
+            }
+            else if (includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Where(u => u.UserId == userId).FirstOrDefaultAsync();
+            }
+            else
+            {
+                return await _context.Users.Where(u => u.UserId == userId).FirstOrDefaultAsync();
+            }
         }
 
-        public Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false)
+        public async Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false)
         {
-            throw new NotImplementedException();
+            if (includeAddresses && includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Include(u => u.Addresses)
+                        .Where(u => u.PhoneNumber.Equals(phoneNumber)).FirstOrDefaultAsync();
+            }
+            else if (includeAddresses)
+            {
+                return await _context.Users
+                        .Include(u => u.Addresses)
+                        .Where(u => u.PhoneNumber.Equals(phoneNumber)).FirstOrDefaultAsync();
+            }
+            else if (includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Where(u => u.PhoneNumber.Equals(phoneNumber)).FirstOrDefaultAsync();
+            }
+            else
+            {
+                return await _context.Users.Where(u => u.PhoneNumber.Equals(phoneNumber)).FirstOrDefaultAsync();
+            }
         }
 
         public Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize)

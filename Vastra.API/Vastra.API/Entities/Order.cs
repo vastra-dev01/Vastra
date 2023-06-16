@@ -18,7 +18,8 @@ namespace Vastra.API.Entities
         public User User { get; set; }
 
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-
+        public DateTime DateAdded { get; private set; }
+        public DateTime DateModified { get; private set; }
         public Order(int value, string paymentStatus)
         {
             Value = value;

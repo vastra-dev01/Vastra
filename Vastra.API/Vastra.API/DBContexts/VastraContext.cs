@@ -72,6 +72,69 @@ namespace Vastra.API.DBContexts
                 ParentCategoryId = 4
             }
             );
+            modelBuilder.Entity<Address>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Address>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<CartItem>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<CartItem>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Category>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Category>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Order>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Order>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Product>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Role>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Role>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<User>()
+                .Property(p => p.DateModified)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<User>()
+                .Property(p => p.DateAdded)
+                .HasComputedColumnSql("getutcdate()")
+                .ValueGeneratedOnAdd();
+
             base.OnModelCreating(modelBuilder);
         }
 

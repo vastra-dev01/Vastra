@@ -20,7 +20,8 @@ namespace Vastra.API.Entities
 
         [ForeignKey("OrderId")]
         public Order Order { get; set; }
-
+        public DateTime DateAdded { get; private set; }
+        public DateTime DateModified { get; private set; }
         public CartItem(int quantity)
         {
             Quantity = quantity;
