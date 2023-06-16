@@ -3,3 +3,5 @@ bin/
 obj/
 # ignore Visual Studio Files
 .vs/
+# ignore appsettings.development.json
+appsettings.Development.json
