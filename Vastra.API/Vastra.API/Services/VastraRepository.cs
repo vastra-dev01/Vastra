@@ -44,11 +44,6 @@ namespace Vastra.API.Services
 
         }
 
-        public async Task AddOrderAsync(Order order)
-        {
-            await _context.Orders.AddAsync(order);
-        }
-
         public async Task AddOrderForUserAsync(int userId, Order order)
         {
             var user = await GetUserAsync(userId);
@@ -58,9 +53,13 @@ namespace Vastra.API.Services
             }
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductForCategoryAsync(int categoryId, Product product)
         {
-            await _context.Products.AddAsync(product);
+            var category = await GetCategoryAsync(categoryId);
+            if(category != null)
+            {
+                category.Products.Add(product);
+            }
         }
 
         public async Task AddRoleAsync(Role role)
