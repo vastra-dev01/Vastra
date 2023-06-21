@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vastra.API.Models.ForCreation
+namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class AddressForCreationDto
+    public class AddressForCreationAndUpdateDto
     {
         [Required(ErrorMessage = "Please provide location details")]
         [MaxLength(100)]

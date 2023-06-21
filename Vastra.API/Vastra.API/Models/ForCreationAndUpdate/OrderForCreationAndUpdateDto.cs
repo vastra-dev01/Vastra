@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vastra.API.Models.ForCreation
+namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class OrderForCreationDto
+    public class OrderForCreationAndUpdateDto
     {
         [Required(ErrorMessage = "Please provide order value")]
         public int Value { get; set; }

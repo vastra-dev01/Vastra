@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vastra.API.Models.ForCreation
+namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class RoleForCreationDto
+    public class RoleForCreationAndUpdateDto
     {
         [Required(ErrorMessage = "Please provide a role name")]
         [MaxLength(50)]

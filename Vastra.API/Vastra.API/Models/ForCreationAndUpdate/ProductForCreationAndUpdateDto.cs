@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vastra.API.Models.ForCreation
+namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class ProductForCreationDto
+    public class ProductForCreationAndUpdateDto
     {
         [Required(ErrorMessage = "Please provide a product name")]
         [MaxLength(50)]
