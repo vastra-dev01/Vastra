@@ -10,7 +10,7 @@ namespace Vastra.API.Entities
 
         public int Value { get; set; }
 
-        public String PaymentStatus { get; set; }
+        public String PaymentStatus { get; set; } 
 
         public int UserId { get; set; }
 
