@@ -33,7 +33,7 @@ namespace Vastra.API.Services
 
         Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize);
         Task<Product?> GetProductAsync(int productId);
-        Task AddProductAsync(Product product);
+        Task AddProductForCategoryAsync(int categoryId, Product product);
         Task UpdateProductAsync(Product product);
         void DeleteProduct(Product product);
 
@@ -46,7 +46,6 @@ namespace Vastra.API.Services
         Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId);
         Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId);
         Task AddCartItemForOrderAsync(int orderId, CartItem cartItem);
-        Task AddOrderAsync(Order order);
         Task UpdateOrderAsync(Order order);
         void DeleteOrder(Order order);
 
