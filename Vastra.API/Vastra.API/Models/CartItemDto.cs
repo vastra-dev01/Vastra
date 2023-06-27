@@ -5,7 +5,7 @@ namespace Vastra.API.Models
 {
     public class CartItemDto
     {
-        public int Id { get; set; }
+        public int CartItemId { get; set; }
 
         public int Quantity { get; set; }
         public DateTime DateAdded { get; }
