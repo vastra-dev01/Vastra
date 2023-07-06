@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vastra.API.DBContexts;
 
@@ -11,9 +12,10 @@ using Vastra.API.DBContexts;
 namespace Vastra.API.Migrations
 {
     [DbContext(typeof(VastraContext))]
-    partial class VastraContextModelSnapshot : ModelSnapshot
+    [Migration("20230706092515_removedComputedColumns")]
+    partial class removedComputedColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

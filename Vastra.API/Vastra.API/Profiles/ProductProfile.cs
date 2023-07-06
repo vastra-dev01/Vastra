@@ -7,8 +7,8 @@ namespace Vastra.API.Profiles
         public ProductProfile()
         {
             CreateMap<Entities.Product, Models.ProductDto>();
-            CreateMap<Entities.Product, Models.ForCreationAndUpdate.ProductForCreationAndUpdateDto>();
-            CreateMap<Models.ForCreationAndUpdate.ProductForCreationAndUpdateDto, Entities.Product>();
+            CreateMap<Entities.Product, Models.ForCreationAndUpdate.ProductForCreationDto>();
+            CreateMap<Models.ForCreationAndUpdate.ProductForCreationDto, Entities.Product>();
         }
     }
 }

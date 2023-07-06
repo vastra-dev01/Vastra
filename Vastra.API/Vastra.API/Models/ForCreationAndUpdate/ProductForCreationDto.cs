@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class ProductForCreationAndUpdateDto
+    public class ProductForCreationDto
     {
         [Required(ErrorMessage = "Please provide a product name")]
         [MaxLength(50)]
@@ -21,5 +21,8 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         public string Image { get; set; }
 
         public int Quantity { get; set; }
+
+        //public DateTime Created { get; set; } = DateTime.Now;
+        //public DateTime Modified { get; set; } = DateTime.Now;
     }
 }

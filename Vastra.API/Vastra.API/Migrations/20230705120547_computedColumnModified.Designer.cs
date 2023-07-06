@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vastra.API.DBContexts;
 
@@ -11,9 +12,10 @@ using Vastra.API.DBContexts;
 namespace Vastra.API.Migrations
 {
     [DbContext(typeof(VastraContext))]
-    partial class VastraContextModelSnapshot : ModelSnapshot
+    [Migration("20230705120547_computedColumnModified")]
+    partial class computedColumnModified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,10 +41,14 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -80,10 +86,14 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -117,10 +127,14 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
@@ -204,10 +218,14 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
@@ -242,10 +260,14 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -288,10 +310,14 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -311,10 +337,14 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");

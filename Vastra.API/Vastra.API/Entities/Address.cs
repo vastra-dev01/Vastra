@@ -26,8 +26,8 @@ namespace Vastra.API.Entities
 
         public int? Type { get; set; }
 
-        public DateTime DateAdded { get; private set; }
-        public DateTime DateModified { get; private set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
 
         public Address(string location, string city, string state, int pinCode, string country)
         {

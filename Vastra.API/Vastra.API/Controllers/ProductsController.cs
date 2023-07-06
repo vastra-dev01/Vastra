@@ -33,19 +33,20 @@ namespace Vastra.API.Controllers
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(productEntities));
         }
-        [HttpGet("{productId}", Name ="GetProduct")]
-        public async Task<IActionResult>GetProduct(int productId)
+        [HttpHead]
+        [HttpGet("{productId}", Name = "GetProduct")]
+        public async Task<IActionResult> GetProduct(int productId)
         {
             var product = await _vastraRepository.GetProductAsync(productId);
-            if(product == null)
+            if (product == null)
             {
                 return NotFound();
             }
             return Ok(_mapper.Map<ProductDto>(product));
         }
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> CreateProduct(int categoryId, 
-            ProductForCreationAndUpdateDto product)
+        public async Task<ActionResult<ProductDto>> CreateProduct(int categoryId,
+            ProductForCreationDto product)
         {
             var category = await _vastraRepository.GetCategoryAsync(categoryId);
             if (category == null)
@@ -53,6 +54,11 @@ namespace Vastra.API.Controllers
                 return NotFound();
             }
             var finalProduct = _mapper.Map<Entities.Product>(product);
+
+            // set date added and date modified for new product
+            finalProduct.DateAdded = DateTime.Now;
+            finalProduct.DateModified = DateTime.Now;
+
             await _vastraRepository.AddProductForCategoryAsync(categoryId, finalProduct);
             await _vastraRepository.SaveChangesAsync();
 
@@ -66,5 +72,6 @@ namespace Vastra.API.Controllers
             createdProductToReturn
             );
         }
+
     }
 }

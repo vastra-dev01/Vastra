@@ -16,8 +16,8 @@ namespace Vastra.API.Entities
         public int? ParentCategoryId { get; set; }
 
         public ICollection<Category> ChildCategories { get; set; } = new List<Category>();
-        public DateTime DateAdded { get; private set; }
-        public DateTime DateModified { get; private set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
         public Category(string categoryName)
         {
             CategoryName = categoryName;
