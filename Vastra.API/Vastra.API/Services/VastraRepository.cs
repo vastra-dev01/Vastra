@@ -62,6 +62,11 @@ namespace Vastra.API.Services
             }
         }
 
+        public async Task<bool> AddressExistsAsync(int addressId)
+        {
+            return await _context.Addresses.AnyAsync(a => a.AddressId == addressId);
+        }
+
         public async Task AddRoleAsync(Role role)
         {
             await _context.Roles.AddAsync(role);
@@ -70,6 +75,16 @@ namespace Vastra.API.Services
         public async Task AddUser(User user)
         {
             await _context.Users.AddAsync(user);
+        }
+
+        public async Task<bool> CartItemExistsAsync(int CartItemId)
+        {
+            return await _context.CartItems.AnyAsync(c => c.CartItemId == CartItemId);
+        }
+
+        public async Task<bool> CategoryExistsAsync(int categoryId)
+        {
+            return await _context.Categories.AnyAsync(c => c.CategoryId == categoryId);
         }
 
         public void DeleteAddress(Address address)
@@ -319,6 +334,17 @@ namespace Vastra.API.Services
 
             return (collectionToReturn, paginationMetadata);
         }
+
+        public async Task<bool> OrderExistsAsync(int orderId)
+        {
+            return await _context.Orders.AnyAsync(o => o.OrderId == orderId);
+        }
+
+        public async Task<bool> ProductExistsAsync(int productId)
+        {
+            return await _context.Products.AnyAsync(p => p.ProductId == productId);
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync() >= 0);
@@ -352,6 +378,11 @@ namespace Vastra.API.Services
         public Task UpdateUser(User user)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            return await _context.Users.AnyAsync(u => u.UserId == userId);
         }
     }
 }
