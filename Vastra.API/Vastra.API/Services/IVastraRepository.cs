@@ -62,7 +62,7 @@ namespace Vastra.API.Services
         Task<IEnumerable<Category>?> GetChildCategoriesForCategoryAsync(int categoryId);
         Task<Category?> GetChildCategoryForCategoryAsync(int categoryId, int childCategoryId);
         Task<Product?> GetProductForCategoryAsync(int categoryId, int productId);
-        Task<IEnumerable<Product>> GetProductsForCategory(int categoryId);
+        Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategoryAsync(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize);
         Task AddChildCategoryForCategoryAsync(int categoryId, Category category);
         Task AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);

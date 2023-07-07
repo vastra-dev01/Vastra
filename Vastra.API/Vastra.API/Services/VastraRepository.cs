@@ -260,9 +260,28 @@ namespace Vastra.API.Services
 
         }
 
-        public async Task<IEnumerable<Product>> GetProductsForCategory(int categoryId)
+        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategory(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize)
         {
-            return await _context.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+            var collection = _context.Products.Where(p => p.CategoryId == categoryId) as IQueryable<Product>;
+            if (!string.IsNullOrEmpty(name))
+            {
+                name = name.Trim();
+                collection = collection.Where(p => p.Name == name);
+            }
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(c => c.Name.Contains(searchQuery)
+                || (c.Description != null && c.Description.Contains(searchQuery)));
+            }
+
+            var totalPageCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalPageCount, pageSize, pageNumber);
+            var collectionToReturn = await collection.OrderBy(p => p.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Role?> GetRoleAsync(int roleId)
