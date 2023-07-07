@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class OrderForCreationAndUpdateDto
+    public class OrderForUpdateDto
     {
         [Required(ErrorMessage = "Please provide order value")]
         public int Value { get; set; }

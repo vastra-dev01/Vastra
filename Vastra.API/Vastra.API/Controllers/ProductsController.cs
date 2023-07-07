@@ -33,10 +33,14 @@ namespace Vastra.API.Controllers
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(productEntities));
         }
-        [HttpHead]
+        [HttpHead("{productId}")]
         [HttpGet("{productId}", Name = "GetProduct")]
-        public async Task<IActionResult> GetProduct(int productId)
+        public async Task<IActionResult> GetProduct(int categoryId, int productId)
         {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
             var product = await _vastraRepository.GetProductAsync(productId);
             if (product == null)
             {
@@ -67,7 +71,7 @@ namespace Vastra.API.Controllers
             new
             {
                 categoryId = categoryId,
-                pointOfInterestId = createdProductToReturn.ProductId
+                productId = createdProductToReturn.ProductId
             },
             createdProductToReturn
             );

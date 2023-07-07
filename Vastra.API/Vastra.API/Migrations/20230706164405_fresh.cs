@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Vastra.API.Migrations
 {
-    public partial class initialmigration : Migration
+    public partial class fresh : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +16,9 @@ namespace Vastra.API.Migrations
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ParentCategoryId = table.Column<int>(type: "int", nullable: true)
+                    ParentCategoryId = table.Column<int>(type: "int", nullable: true),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,7 +36,9 @@ namespace Vastra.API.Migrations
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +59,9 @@ namespace Vastra.API.Migrations
                     Price = table.Column<float>(type: "real", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +85,9 @@ namespace Vastra.API.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,7 +113,9 @@ namespace Vastra.API.Migrations
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<int>(type: "int", nullable: true)
+                    Type = table.Column<int>(type: "int", nullable: true),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,7 +136,9 @@ namespace Vastra.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<int>(type: "int", nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,7 +159,9 @@ namespace Vastra.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false)
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,6 +179,46 @@ namespace Vastra.API.Migrations
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 1, "Men", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4742), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4753), null });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 2, "Women", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754), null });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 3, "Kids", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4755), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4756), null });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 4, "T Shirts", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757), 1 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 6, "Tops", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4759), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4760), 2 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 5, "Full Sleeve T Shirts", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758), 4 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 7, "French Tops", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761), 6 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
+                values: new object[] { 8, "Half Sleeve T Shirts", new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762), new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762), 4 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",

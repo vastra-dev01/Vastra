@@ -7,8 +7,10 @@ namespace Vastra.API.Profiles
         public CartItemProfile()
         {
             CreateMap<Entities.CartItem, Models.CartItemDto>();
-            CreateMap<Entities.CartItem, Models.ForCreationAndUpdate.CartItemForCreationAndUpdateDto>();
-            CreateMap<Models.ForCreationAndUpdate.CartItemForCreationAndUpdateDto, Entities.CartItem>();
+            CreateMap<Entities.CartItem, Models.ForCreationAndUpdate.CartItemForCreationDto>();
+            CreateMap<Entities.CartItem, Models.ForCreationAndUpdate.CartItemForUpdateDto>();
+            CreateMap<Models.ForCreationAndUpdate.CartItemForCreationDto, Entities.CartItem>();
+            CreateMap<Models.ForCreationAndUpdate.CartItemForUpdateDto, Entities.CartItem>();
         }
     }
 }

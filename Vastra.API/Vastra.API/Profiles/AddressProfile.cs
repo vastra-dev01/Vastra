@@ -7,8 +7,10 @@ namespace Vastra.API.Profiles
         public AddressProfile()
         {
             CreateMap<Entities.Address, Models.AddressDto>();
-            CreateMap<Entities.Address, Models.ForCreationAndUpdate.AddressForCreationAndUpdateDto>();
-            CreateMap<Models.ForCreationAndUpdate.AddressForCreationAndUpdateDto, Entities.Address>();
+            CreateMap<Entities.Address, Models.ForCreationAndUpdate.AddressForCreationDto>();
+            CreateMap<Entities.Address, Models.ForCreationAndUpdate.AddressForUpdateDto>();
+            CreateMap<Models.ForCreationAndUpdate.AddressForCreationDto, Entities.Address>();
+            CreateMap<Models.ForCreationAndUpdate.AddressForUpdateDto, Entities.Address>();
         }
     }
 }

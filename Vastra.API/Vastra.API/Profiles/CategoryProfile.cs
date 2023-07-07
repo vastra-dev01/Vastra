@@ -9,8 +9,10 @@ namespace Vastra.API.Profiles
             CreateMap<Entities.Category, Models.CategoryDto>();
             CreateMap<Entities.Category, Models.CategoryWithoutChildCategoriesDto>();
             CreateMap<Entities.Category, Models.CategoryWithoutProductsDto>();
-            CreateMap<Entities.Category, Models.ForCreationAndUpdate.CategoryForCreationAndUpdateDto>();
-            CreateMap<Models.ForCreationAndUpdate.CategoryForCreationAndUpdateDto, Entities.Category>();
+            CreateMap<Entities.Category, Models.ForCreationAndUpdate.CategoryForUpdateDto>();
+            CreateMap<Entities.Category, Models.ForCreationAndUpdate.CategoryForCreationDto>();
+            CreateMap<Models.ForCreationAndUpdate.CategoryForUpdateDto, Entities.Category>();
+            CreateMap<Models.ForCreationAndUpdate.CategoryForCreationDto, Entities.Category>();
         }
     }
 }

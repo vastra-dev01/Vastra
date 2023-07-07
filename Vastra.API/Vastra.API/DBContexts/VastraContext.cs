@@ -38,39 +38,55 @@ namespace Vastra.API.DBContexts
             new Category("Men")
             {
                 CategoryId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Women")
             {
                 CategoryId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Kids")
             {
                 CategoryId = 3,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("T Shirts")
             {
                 CategoryId = 4,
-                ParentCategoryId = 1
+                ParentCategoryId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Full Sleeve T Shirts")
             {
                 CategoryId = 5,
-                ParentCategoryId = 4
+                ParentCategoryId = 4,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Tops")
             {
                 CategoryId = 6,
-                ParentCategoryId = 2
+                ParentCategoryId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("French Tops")
             {
                 CategoryId = 7,
-                ParentCategoryId = 6
+                ParentCategoryId = 6,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Half Sleeve T Shirts")
             {
                 CategoryId = 8,
-                ParentCategoryId = 4
+                ParentCategoryId = 4,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             }
             );
             base.OnModelCreating(modelBuilder);

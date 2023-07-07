@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class AddressForCreationAndUpdateDto
+    public class AddressForCreationDto
     {
         [Required(ErrorMessage = "Please provide location details")]
         [MaxLength(100)]

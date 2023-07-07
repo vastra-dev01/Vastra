@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class RoleForCreationAndUpdateDto
+    public class RoleForCreationDto
     {
         [Required(ErrorMessage = "Please provide a role name")]
         [MaxLength(50)]

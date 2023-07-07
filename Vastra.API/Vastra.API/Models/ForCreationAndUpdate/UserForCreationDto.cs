@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class UserForCreationAndUpdateDto
+    public class UserForCreationDto
     {
         [Required(ErrorMessage = "Please provide a first name")]
         [MaxLength(50)]
