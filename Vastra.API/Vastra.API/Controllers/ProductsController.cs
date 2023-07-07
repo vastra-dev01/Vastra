@@ -20,15 +20,15 @@ namespace Vastra.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(int categoryId,
             string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             if (pageSize > maxProductsPageSize)
             {
                 pageSize = maxProductsPageSize;
             }
-            var (productEntities, paginationMetadata) = await _vastraRepository.GetProductsAsync(
-                name, searchQuery, pageNumber, pageSize);
+            var (productEntities, paginationMetadata) = await _vastraRepository.GetProductsForCategoryAsync(
+                categoryId, name, searchQuery, pageNumber, pageSize);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(productEntities));
@@ -41,7 +41,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            var product = await _vastraRepository.GetProductAsync(productId);
+            var product = await _vastraRepository.GetProductForCategoryAsync(categoryId, productId);
             if (product == null)
             {
                 return NotFound();
