@@ -61,6 +61,8 @@ namespace Vastra.API.Services
         Task<Category?> GetCategoryAsync(int categoryId, bool includeChildCategories = false);
         Task<IEnumerable<Category>?> GetChildCategoriesForCategoryAsync(int categoryId);
         Task<Category?> GetChildCategoryForCategoryAsync(int categoryId, int childCategoryId);
+        Task<Product?> GetProductForCategoryAsync(int categoryId, int productId);
+        Task<IEnumerable<Product>> GetProductsForCategory(int categoryId);
         Task AddChildCategoryForCategoryAsync(int categoryId, Category category);
         Task AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);

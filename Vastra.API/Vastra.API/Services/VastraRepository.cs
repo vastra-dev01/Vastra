@@ -228,6 +228,13 @@ namespace Vastra.API.Services
             return await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
+        public async Task<Product?> GetProductForCategoryAsync(int categoryId, int productId)
+        {
+            return await _context.Products
+                .Where(p => p.CategoryId == categoryId && p.ProductId == productId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
         {
             var collection = _context.Products as IQueryable<Product>;
@@ -251,6 +258,11 @@ namespace Vastra.API.Services
                 .ToListAsync();
             return (collectionToReturn, paginationMetadata);
 
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsForCategory(int categoryId)
+        {
+            return await _context.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
         }
 
         public async Task<Role?> GetRoleAsync(int roleId)
