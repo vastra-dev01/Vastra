@@ -228,6 +228,13 @@ namespace Vastra.API.Services
             return await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
+        public async Task<Product?> GetProductForCategoryAsync(int categoryId, int productId)
+        {
+            return await _context.Products
+                .Where(p => p.CategoryId == categoryId && p.ProductId == productId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
         {
             var collection = _context.Products as IQueryable<Product>;
@@ -251,6 +258,30 @@ namespace Vastra.API.Services
                 .ToListAsync();
             return (collectionToReturn, paginationMetadata);
 
+        }
+
+        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategoryAsync(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize)
+        {
+            var collection = _context.Products.Where(p => p.CategoryId == categoryId) as IQueryable<Product>;
+            if (!string.IsNullOrEmpty(name))
+            {
+                name = name.Trim();
+                collection = collection.Where(p => p.Name == name);
+            }
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(c => c.Name.Contains(searchQuery)
+                || (c.Description != null && c.Description.Contains(searchQuery)));
+            }
+
+            var totalPageCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalPageCount, pageSize, pageNumber);
+            var collectionToReturn = await collection.OrderBy(p => p.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Role?> GetRoleAsync(int roleId)
