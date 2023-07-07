@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vastra.API.Models;
@@ -75,6 +76,72 @@ namespace Vastra.API.Controllers
             },
             createdProductToReturn
             );
+        }
+        [HttpPut("{productId}")]
+        public async Task<ActionResult> UpdateProduct(int categoryId, int productId,
+            ProductForUpdateDto product)
+        {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var productEntity = await _vastraRepository.GetProductForCategoryAsync(categoryId, productId);
+            if(productEntity == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(product, productEntity);
+            //update Modified Time of product
+            productEntity.DateModified = DateTime.Now;
+            await _vastraRepository.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpPatch("{productId}")]
+        public async Task<ActionResult> PartiallyUpdateProduct(int categoryId, int productId,
+            JsonPatchDocument<ProductForUpdateDto> patchDocument)
+        {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var productEntity = await _vastraRepository.GetProductForCategoryAsync(categoryId, productId);
+            if(productEntity == null)
+            {
+                return NotFound();
+            }
+            var productToPatch = _mapper.Map<ProductForUpdateDto>(productEntity);
+            patchDocument.ApplyTo(productToPatch, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!TryValidateModel(productToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+            _mapper.Map(productToPatch, productEntity);
+            //update Modified Time of product
+            productEntity.DateModified = DateTime.Now;
+            await _vastraRepository.SaveChangesAsync();
+            return NoContent();
+
+        }
+
+        [HttpDelete("{productId}")]
+        public async Task<ActionResult> DeleteProduct(int categoryId, int productId)
+        {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var productToDelete = await _vastraRepository.GetProductForCategoryAsync(categoryId, productId);
+            if(productToDelete == null)
+            {
+                return NotFound();
+            }
+            _vastraRepository.DeleteProduct(productToDelete);
+            await _vastraRepository.SaveChangesAsync();
+            return NoContent();
         }
 
     }
