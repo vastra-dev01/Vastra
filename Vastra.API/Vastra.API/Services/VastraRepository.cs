@@ -260,7 +260,7 @@ namespace Vastra.API.Services
 
         }
 
-        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategory(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategoryAsync(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize)
         {
             var collection = _context.Products.Where(p => p.CategoryId == categoryId) as IQueryable<Product>;
             if (!string.IsNullOrEmpty(name))

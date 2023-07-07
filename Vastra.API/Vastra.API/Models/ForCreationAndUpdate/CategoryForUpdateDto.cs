@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class CategoryForCreationAndUpdateDto
+    public class CategoryForUpdateDto
     {
         [Required(ErrorMessage = "Please provide a category name")]
         [MaxLength(50)]
