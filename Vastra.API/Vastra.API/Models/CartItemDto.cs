@@ -8,7 +8,7 @@ namespace Vastra.API.Models
         public int CartItemId { get; set; }
 
         public int Quantity { get; set; }
-        public DateTime DateAdded { get; }
-        public DateTime DateModified { get; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
     }
 }

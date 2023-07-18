@@ -22,7 +22,7 @@
                 return Orders.Count;
             }
         }
-        public DateTime DateAdded { get; }
-        public DateTime DateModified { get; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
     }
 }

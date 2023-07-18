@@ -32,7 +32,7 @@ namespace Vastra.API.DBContexts
                 .HasOne(c => c.ParentCategory)
                 .WithMany(c => c.ChildCategories)
                 .IsRequired(false)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull); //TODO : Delete not working
 
             modelBuilder.Entity<Category>().HasData(
             new Category("Men")
