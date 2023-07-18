@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Vastra.API.Entities;
 
 namespace Vastra.API.DBContexts
@@ -31,110 +32,63 @@ namespace Vastra.API.DBContexts
                 .HasOne(c => c.ParentCategory)
                 .WithMany(c => c.ChildCategories)
                 .IsRequired(false)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull); //TODO : Delete not working
 
             modelBuilder.Entity<Category>().HasData(
             new Category("Men")
             {
                 CategoryId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Women")
             {
                 CategoryId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Kids")
             {
                 CategoryId = 3,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("T Shirts")
             {
                 CategoryId = 4,
-                ParentCategoryId = 1
+                ParentCategoryId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Full Sleeve T Shirts")
             {
                 CategoryId = 5,
-                ParentCategoryId = 4
+                ParentCategoryId = 4,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Tops")
             {
                 CategoryId = 6,
-                ParentCategoryId = 2
+                ParentCategoryId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("French Tops")
             {
                 CategoryId = 7,
-                ParentCategoryId = 6
+                ParentCategoryId = 6,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             },
             new Category("Half Sleeve T Shirts")
             {
                 CategoryId = 8,
-                ParentCategoryId = 4
+                ParentCategoryId = 4,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
             }
             );
-            modelBuilder.Entity<Address>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<Address>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<CartItem>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<CartItem>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Category>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<Category>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Order>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<Order>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Product>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<Product>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Role>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<Role>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<User>()
-                .Property(p => p.DateModified)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnUpdate();
-            modelBuilder.Entity<User>()
-                .Property(p => p.DateAdded)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
-
             base.OnModelCreating(modelBuilder);
         }
 

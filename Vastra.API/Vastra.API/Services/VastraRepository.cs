@@ -44,11 +44,6 @@ namespace Vastra.API.Services
 
         }
 
-        public async Task AddOrderAsync(Order order)
-        {
-            await _context.Orders.AddAsync(order);
-        }
-
         public async Task AddOrderForUserAsync(int userId, Order order)
         {
             var user = await GetUserAsync(userId);
@@ -58,9 +53,18 @@ namespace Vastra.API.Services
             }
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductForCategoryAsync(int categoryId, Product product)
         {
-            await _context.Products.AddAsync(product);
+            var category = await GetCategoryAsync(categoryId);
+            if(category != null)
+            {
+                category.Products.Add(product);
+            }
+        }
+
+        public async Task<bool> AddressExistsAsync(int addressId)
+        {
+            return await _context.Addresses.AnyAsync(a => a.AddressId == addressId);
         }
 
         public async Task AddRoleAsync(Role role)
@@ -71,6 +75,16 @@ namespace Vastra.API.Services
         public async Task AddUser(User user)
         {
             await _context.Users.AddAsync(user);
+        }
+
+        public async Task<bool> CartItemExistsAsync(int CartItemId)
+        {
+            return await _context.CartItems.AnyAsync(c => c.CartItemId == CartItemId);
+        }
+
+        public async Task<bool> CategoryExistsAsync(int categoryId)
+        {
+            return await _context.Categories.AnyAsync(c => c.CategoryId == categoryId);
         }
 
         public void DeleteAddress(Address address)
@@ -214,6 +228,13 @@ namespace Vastra.API.Services
             return await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
+        public async Task<Product?> GetProductForCategoryAsync(int categoryId, int productId)
+        {
+            return await _context.Products
+                .Where(p => p.CategoryId == categoryId && p.ProductId == productId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
         {
             var collection = _context.Products as IQueryable<Product>;
@@ -237,6 +258,30 @@ namespace Vastra.API.Services
                 .ToListAsync();
             return (collectionToReturn, paginationMetadata);
 
+        }
+
+        public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForCategoryAsync(int categoryId, string? name, string? searchQuery, int pageNumber, int pageSize)
+        {
+            var collection = _context.Products.Where(p => p.CategoryId == categoryId) as IQueryable<Product>;
+            if (!string.IsNullOrEmpty(name))
+            {
+                name = name.Trim();
+                collection = collection.Where(p => p.Name == name);
+            }
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(c => c.Name.Contains(searchQuery)
+                || (c.Description != null && c.Description.Contains(searchQuery)));
+            }
+
+            var totalPageCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalPageCount, pageSize, pageNumber);
+            var collectionToReturn = await collection.OrderByDescending(p => p.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Role?> GetRoleAsync(int roleId)
@@ -320,6 +365,17 @@ namespace Vastra.API.Services
 
             return (collectionToReturn, paginationMetadata);
         }
+
+        public async Task<bool> OrderExistsAsync(int orderId)
+        {
+            return await _context.Orders.AnyAsync(o => o.OrderId == orderId);
+        }
+
+        public async Task<bool> ProductExistsAsync(int productId)
+        {
+            return await _context.Products.AnyAsync(p => p.ProductId == productId);
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync() >= 0);
@@ -353,6 +409,11 @@ namespace Vastra.API.Services
         public Task UpdateUser(User user)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            return await _context.Users.AnyAsync(u => u.UserId == userId);
         }
     }
 }

@@ -32,8 +32,8 @@ namespace Vastra.API.Entities
         {
             get; set;
         }
-        public DateTime DateAdded { get; private set; }
-        public DateTime DateModified { get; private set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
         public Product(string name, string size, string colour, string sKU, float price, string image, int quantity)
         {
             Name = name;

@@ -39,14 +39,10 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -84,14 +80,10 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -125,14 +117,10 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
@@ -148,61 +136,61 @@ namespace Vastra.API.Migrations
                         {
                             CategoryId = 1,
                             CategoryName = "Men",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4742),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4753)
                         },
                         new
                         {
                             CategoryId = 2,
                             CategoryName = "Women",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754)
                         },
                         new
                         {
                             CategoryId = 3,
                             CategoryName = "Kids",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4755),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4756)
                         },
                         new
                         {
                             CategoryId = 4,
                             CategoryName = "T Shirts",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757),
                             ParentCategoryId = 1
                         },
                         new
                         {
                             CategoryId = 5,
                             CategoryName = "Full Sleeve T Shirts",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758),
                             ParentCategoryId = 4
                         },
                         new
                         {
                             CategoryId = 6,
                             CategoryName = "Tops",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4759),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4760),
                             ParentCategoryId = 2
                         },
                         new
                         {
                             CategoryId = 7,
                             CategoryName = "French Tops",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761),
                             ParentCategoryId = 6
                         },
                         new
                         {
                             CategoryId = 8,
                             CategoryName = "Half Sleeve T Shirts",
-                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762),
+                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762),
                             ParentCategoryId = 4
                         });
                 });
@@ -216,14 +204,10 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
@@ -258,14 +242,10 @@ namespace Vastra.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -308,14 +288,10 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -335,14 +311,10 @@ namespace Vastra.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
                     b.Property<DateTime>("DateAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateModified")
-                        .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("getutcdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");

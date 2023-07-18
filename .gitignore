@@ -5,3 +5,4 @@ obj/
 .vs/
 # ignore appsettings.development.json
 appsettings.Development.json
+/Vastra.API/Vastra.API/Vastra.API.csproj.user

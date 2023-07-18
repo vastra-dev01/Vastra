@@ -10,7 +10,7 @@ namespace Vastra.API.Entities
 
         public int Value { get; set; }
 
-        public String PaymentStatus { get; set; }
+        public String PaymentStatus { get; set; } 
 
         public int UserId { get; set; }
 
@@ -18,8 +18,8 @@ namespace Vastra.API.Entities
         public User User { get; set; }
 
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-        public DateTime DateAdded { get; private set; }
-        public DateTime DateModified { get; private set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
         public Order(int value, string paymentStatus)
         {
             Value = value;

@@ -26,8 +26,8 @@ namespace Vastra.API.Entities
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
-        public DateTime DateAdded { get; private set; }
-        public DateTime DateModified { get; private set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateModified { get; set; }
         public User(string firstName, string? lastName, string phoneNumber, string password)
         {
             FirstName = firstName;
