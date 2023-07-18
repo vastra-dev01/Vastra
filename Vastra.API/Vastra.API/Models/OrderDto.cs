@@ -10,7 +10,7 @@ namespace Vastra.API.Models
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
 
-        ICollection<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
+        public ICollection<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
         public int NumberOfCartItems { 
             get { 
                 return CartItems.Count;
