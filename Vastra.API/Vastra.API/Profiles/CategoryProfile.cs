@@ -7,8 +7,8 @@ namespace Vastra.API.Profiles
         public CategoryProfile()
         {
             CreateMap<Entities.Category, Models.CategoryDto>();
-            CreateMap<Entities.Category, Models.CategoryWithoutChildCategoriesDto>();
-            CreateMap<Entities.Category, Models.CategoryWithoutProductsDto>();
+            CreateMap<Entities.Category, Models.CategoryWithChildCategoriesDto>();
+            CreateMap<Entities.Category, Models.CategoryWithProductsDto>();
             CreateMap<Entities.Category, Models.ForCreationAndUpdate.CategoryForUpdateDto>();
             CreateMap<Entities.Category, Models.ForCreationAndUpdate.CategoryForCreationDto>();
             CreateMap<Models.ForCreationAndUpdate.CategoryForUpdateDto, Entities.Category>();
