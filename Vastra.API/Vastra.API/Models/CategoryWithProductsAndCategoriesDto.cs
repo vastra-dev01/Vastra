@@ -3,11 +3,11 @@
     public class CategoryWithProductsAndCategoriesDto
     {
         public int CategoryId { get; set; }
-        public string Name { get; set; }
+        public string CategoryName { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
 
-        ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
+        public ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
         public int NumberOfChildCategories
         {
             get
@@ -15,7 +15,7 @@
                 return ChildCategories.Count;
             }
         }
-        ICollection<ProductDto> Products { get; set; } = new List<ProductDto>();
+        public ICollection<ProductDto> Products { get; set; } = new List<ProductDto>();
         public int NumberOfProducts
         {
             get

@@ -6,7 +6,7 @@
         public string CategoryName { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
-        ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
+        public ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
         public int NumberOfChildCategories
         {
             get
