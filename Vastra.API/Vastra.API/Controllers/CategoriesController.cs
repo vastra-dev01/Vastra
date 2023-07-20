@@ -123,5 +123,51 @@ namespace Vastra.API.Controllers
             return NoContent();
 
         }
+        [HttpDelete("{categoryId}")]
+        public async Task<ActionResult> DeleteCategory(int categoryId) {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var categoryToDelete = await _vastraRepository.GetCategoryAsync(categoryId);
+            _vastraRepository.DeleteCategory(categoryToDelete);
+            await _vastraRepository.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpGet("{categoryId}/subCategories")]
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetChildCategoriesForCategory(int categoryId)
+        {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var childCategories = await _vastraRepository.GetChildCategoriesForCategoryAsync(categoryId);
+            return Ok(_mapper.Map<IEnumerable<CategoryDto>>(childCategories));
+        }
+        //[HttpGet("{categoryId}/subCategories/{subCategoryId}")]
+        //public async Task<ActionResult<CategoryDto>>  -- This is not needed currently as indivisual category can be fetched by GetCategory GET method
+        [HttpPost("{categoryId}/subCategories")]
+        public async Task<ActionResult<CategoryDto>> CreateSubCategory(int categoryId, CategoryForCreationDto subCategory)
+        {
+            if(!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                return NotFound();
+            }
+            var finalSubcategory = _mapper.Map<Entities.Category>(subCategory);
+            //set date added  & date modified for new sub category
+            finalSubcategory.DateAdded = DateTime.Now;
+            finalSubcategory.DateModified = DateTime.Now;
+
+            await _vastraRepository.AddChildCategoryForCategoryAsync(categoryId, finalSubcategory);
+            await _vastraRepository.SaveChangesAsync();
+            var createdSubCategoryToReturn = _mapper.Map<CategoryDto>(finalSubcategory);
+            return CreatedAtRoute("GetCategory",
+                new
+                {
+                    categoryId = createdSubCategoryToReturn.CategoryId
+                },
+                createdSubCategoryToReturn
+                );
+        }
     }
 }
