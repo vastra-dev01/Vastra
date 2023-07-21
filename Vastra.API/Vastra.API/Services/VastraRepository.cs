@@ -160,12 +160,23 @@ namespace Vastra.API.Services
             return (collectionToReturn, paginationMetadata);
         }
 
-        public async Task<Category?> GetCategoryAsync(int categoryId, bool includeChildCategories = false)
+        public async Task<Category?> GetCategoryAsync(int categoryId, bool includeChildCategories = false, bool includeProducts = false)
         {
-            if (includeChildCategories)
+
+            if (includeChildCategories && includeProducts)
             {
-                return await _context.Categories.Include(c => c.ChildCategories)
+                return await _context.Categories.Include(c => c.ChildCategories).Include(c => c.Products)
                     .Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
+            }
+            else if(includeProducts) {
+                return await _context.Categories.Include(c => c.Products)
+                    .Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
+            }
+            else if (includeChildCategories)
+            {
+                var t = await _context.Categories.Include(c => c.ChildCategories)
+                    .Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
+                return t;
             }
             return await _context.Categories.Where(c => c.CategoryId == categoryId).FirstOrDefaultAsync();
         }
