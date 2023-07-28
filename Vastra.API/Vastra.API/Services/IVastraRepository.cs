@@ -23,7 +23,7 @@ namespace Vastra.API.Services
         #endregion User
 
         #region Role
-
+        Task<IEnumerable<Role>> GetRolesAsync();
         Task<Role?> GetRoleAsync(int roleId);
         Task AddRoleAsync(Role role);
         void DeleteRole(Role role);
