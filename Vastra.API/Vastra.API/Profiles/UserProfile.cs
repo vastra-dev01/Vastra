@@ -7,8 +7,9 @@ namespace Vastra.API.Profiles
         public UserProfile()
         {
             CreateMap<Entities.User, Models.UserDto>();
-            CreateMap<Entities.User, Models.UserWithoutAddressesDto>();
-            CreateMap<Entities.User, Models.UserWithoutOrdersDto>();
+            CreateMap<Entities.User, Models.UserWithOrdersDto>();
+            CreateMap<Entities.User, Models.UserWithAddressesDto>();
+            CreateMap<Entities.User, Models.UserWithAddressesAndOrdersDto>();
             CreateMap<Models.ForCreationAndUpdate.UserForCreationDto, Entities.User>();
             CreateMap<Models.ForCreationAndUpdate.UserForUpdateDto, Entities.User>();
             CreateMap<Entities.User, Models.ForCreationAndUpdate.UserForCreationDto>();

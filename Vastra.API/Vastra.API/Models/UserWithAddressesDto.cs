@@ -1,6 +1,6 @@
 ﻿namespace Vastra.API.Models
 {
-    public class UserWithoutOrdersDto
+    public class UserWithAddressesDto
     {
         public int UserId { get; set; }
 
@@ -11,8 +11,6 @@
         public string PhoneNumber { get; set; }
 
         public string? EmailId { get; set; }
-
-        public RoleDto Role { get; set; }
 
         public ICollection<AddressDto> Addresses { get; set; } = new List<AddressDto>();
         public int NumberOfAddresses

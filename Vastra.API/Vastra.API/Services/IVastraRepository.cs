@@ -6,7 +6,8 @@ namespace Vastra.API.Services
     {
         #region User
 
-        Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize);
+        Task<(IEnumerable<User>, PaginationMetadata)> GetUsersByRoleAsync(int roleId, string? name, string? searchQuery, int pageNumber, int pageSize);
+        Task<User?> GetUserByRoleAsync(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false); 
         Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false);
         Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false);
         Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId);
@@ -15,7 +16,7 @@ namespace Vastra.API.Services
         Task<Order?> GetOrderForUserAsync(int userId, int orderId);
         Task AddOrderForUserAsync(int userId, Order order);
         Task AddAddressForUserAsync(int userId, Address address);
-        Task AddUser(User user);
+        Task AddUserForRole(int roleId, User user);
         Task UpdateUser(User user);
         void DeleteUser(User user);
         Task<bool> UserExistsAsync(int userId);
@@ -26,6 +27,7 @@ namespace Vastra.API.Services
         Task<Role?> GetRoleAsync(int roleId);
         Task AddRoleAsync(Role role);
         void DeleteRole(Role role);
+        Task<bool> RoleExistsAsync(int roleId);
 
         #endregion Role
 

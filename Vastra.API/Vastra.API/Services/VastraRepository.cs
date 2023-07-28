@@ -72,9 +72,13 @@ namespace Vastra.API.Services
             await _context.Roles.AddAsync(role);
         }
 
-        public async Task AddUser(User user)
+        public async Task AddUserForRole(int roleId, User user)
         {
-            await _context.Users.AddAsync(user);
+            var role  = await GetRoleAsync(roleId);
+            if(role != null)
+            {
+                role.Users.Add(user);
+            }
         }
 
         public async Task<bool> CartItemExistsAsync(int CartItemId)
@@ -353,9 +357,9 @@ namespace Vastra.API.Services
             }
         }
 
-        public async Task<(IEnumerable<User>, PaginationMetadata)> GetUsersAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<User>, PaginationMetadata)> GetUsersByRoleAsync(int roleId, string? name, string? searchQuery, int pageNumber, int pageSize)
         {
-            var collection = _context.Users as IQueryable<User>;
+            var collection = _context.Users.Where(u => u.RoleId == roleId) as IQueryable<User>;
             if (!string.IsNullOrEmpty(name))
             {
                 collection = collection.Where(u => u.FirstName.Equals(name) || (u.LastName != null && u.LastName.Equals(name)));
@@ -377,6 +381,36 @@ namespace Vastra.API.Services
             return (collectionToReturn, paginationMetadata);
         }
 
+        public async Task<User?> GetUserByRoleAsync(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false)
+        {
+            if (includeAddresses && includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Include(u => u.Addresses)
+                        .Where(u => u.RoleId == roleId && u.UserId == userId)
+                        .FirstOrDefaultAsync();
+            }
+            else if (includeAddresses)
+            {
+                return await _context.Users
+                        .Include(u => u.Addresses)
+                        .Where(u => u.RoleId == roleId && u.UserId == userId)
+                        .FirstOrDefaultAsync();
+            }
+            else if (includeOrders)
+            {
+                return await _context.Users
+                        .Include(u => u.Orders)
+                        .Where(u => u.RoleId == roleId && u.UserId == userId)
+                        .FirstOrDefaultAsync();
+            }
+            else
+            {
+                return await _context.Users.Where(u => u.RoleId == roleId && u.UserId == userId)
+                .FirstOrDefaultAsync();
+            }
+        }
         public async Task<bool> OrderExistsAsync(int orderId)
         {
             return await _context.Orders.AnyAsync(o => o.OrderId == orderId);
@@ -425,6 +459,10 @@ namespace Vastra.API.Services
         public async Task<bool> UserExistsAsync(int userId)
         {
             return await _context.Users.AnyAsync(u => u.UserId == userId);
+        }
+        public async Task<bool> RoleExistsAsync(int roleId)
+        {
+            return await _context.Roles.AnyAsync(r => r.RoleId == roleId);
         }
     }
 }
