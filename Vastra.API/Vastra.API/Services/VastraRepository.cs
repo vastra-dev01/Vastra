@@ -464,5 +464,10 @@ namespace Vastra.API.Services
         {
             return await _context.Roles.AnyAsync(r => r.RoleId == roleId);
         }
+
+        public async Task<IEnumerable<Role>> GetRolesAsync()
+        {
+            return await _context.Roles.OrderBy(r => r.DateModified).ToListAsync();
+        }
     }
 }
