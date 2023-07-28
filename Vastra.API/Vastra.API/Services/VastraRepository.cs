@@ -225,7 +225,7 @@ namespace Vastra.API.Services
 
             var paginationMetadata = new PaginationMetadata(totalPageSize, pageSize, pageNumber);
 
-            var collectionToReturn = await collection.OrderBy(c => c.DateModified) 
+            var collectionToReturn = await collection.OrderByDescending(c => c.DateModified) 
                 .Skip(pageSize * ( pageNumber - 1) )
                 .Take(pageSize)
                 .ToListAsync();
@@ -267,7 +267,7 @@ namespace Vastra.API.Services
 
             var totalPageCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalPageCount, pageSize, pageNumber);
-            var collectionToReturn = await collection.OrderBy(p => p.DateModified)
+            var collectionToReturn = await collection.OrderByDescending(p => p.DateModified)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
