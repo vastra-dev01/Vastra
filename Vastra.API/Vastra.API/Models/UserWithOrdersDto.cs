@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Vastra.API.Entities;
-
-namespace Vastra.API.Models
+﻿namespace Vastra.API.Models
 {
-    public class UserDto
+    public class UserWithOrdersDto
     {
         public int UserId { get; set; }
 
@@ -15,8 +12,15 @@ namespace Vastra.API.Models
 
         public string? EmailId { get; set; }
 
+        public ICollection<OrderDto> Orders { get; set; } = new List<OrderDto>();
+        public int NumberOfOrders
+        {
+            get
+            {
+                return Orders.Count;
+            }
+        }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
-        
     }
 }

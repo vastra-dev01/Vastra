@@ -9,6 +9,7 @@ namespace Vastra.API.Profiles
             CreateMap<Entities.Role, Models.RoleDto>();
             CreateMap<Entities.Role, Models.ForCreationAndUpdate.RoleForCreationDto>();
             CreateMap<Entities.Role, Models.ForCreationAndUpdate.RoleForUpdateDto>();
+            CreateMap<Entities.Role, Models.RoleWithUsersDto>();
             CreateMap<Models.ForCreationAndUpdate.RoleForCreationDto, Entities.Role>();
             CreateMap<Models.ForCreationAndUpdate.RoleForUpdateDto, Entities.Role>();
         }

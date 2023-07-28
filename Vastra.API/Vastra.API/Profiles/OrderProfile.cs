@@ -8,7 +8,7 @@ namespace Vastra.API.Profiles
         {
             CreateMap<Entities.Order, Models.OrderDto>();
             CreateMap<Entities.Order, Models.OrderWithoutCartItemsDto>();
-            CreateMap<Entities.Order, Models.UserWithoutOrdersDto>();
+            CreateMap<Entities.Order, Models.UserWithAddressesDto>();
             CreateMap<Entities.Order, Models.ForCreationAndUpdate.OrderForCreationDto>();
             CreateMap<Entities.Order, Models.ForCreationAndUpdate.OrderForUpdateDto>();
             CreateMap<Models.ForCreationAndUpdate.OrderForCreationDto, Entities.Order>();

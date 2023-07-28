@@ -136,61 +136,61 @@ namespace Vastra.API.Migrations
                         {
                             CategoryId = 1,
                             CategoryName = "Men",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4742),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4753)
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9521),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9534)
                         },
                         new
                         {
                             CategoryId = 2,
                             CategoryName = "Women",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4754)
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9537),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9539)
                         },
                         new
                         {
                             CategoryId = 3,
                             CategoryName = "Kids",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4755),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4756)
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9541),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9542)
                         },
                         new
                         {
                             CategoryId = 4,
                             CategoryName = "T Shirts",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4757),
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9544),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9545),
                             ParentCategoryId = 1
                         },
                         new
                         {
                             CategoryId = 5,
                             CategoryName = "Full Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4758),
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9547),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9549),
                             ParentCategoryId = 4
                         },
                         new
                         {
                             CategoryId = 6,
                             CategoryName = "Tops",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4759),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4760),
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9551),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9552),
                             ParentCategoryId = 2
                         },
                         new
                         {
                             CategoryId = 7,
                             CategoryName = "French Tops",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4761),
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9554),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9555),
                             ParentCategoryId = 6
                         },
                         new
                         {
                             CategoryId = 8,
                             CategoryName = "Half Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762),
-                            DateModified = new DateTime(2023, 7, 6, 22, 14, 4, 833, DateTimeKind.Local).AddTicks(4762),
+                            DateAdded = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9557),
+                            DateModified = new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9558),
                             ParentCategoryId = 4
                         });
                 });
@@ -408,7 +408,7 @@ namespace Vastra.API.Migrations
             modelBuilder.Entity("Vastra.API.Entities.User", b =>
                 {
                     b.HasOne("Vastra.API.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -426,6 +426,11 @@ namespace Vastra.API.Migrations
             modelBuilder.Entity("Vastra.API.Entities.Order", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Vastra.API.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Vastra.API.Entities.User", b =>
