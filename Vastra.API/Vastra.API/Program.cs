@@ -33,6 +33,14 @@ builder.Services.AddAuthentication("Bearer")
         };
     }
     );
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustBeAdmin", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("role", "Admin");
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
