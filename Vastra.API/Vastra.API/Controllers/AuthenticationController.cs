@@ -25,7 +25,7 @@ namespace Vastra.API.Controllers
         {
             //Step 1: validate username/password
             var user = await _vastraRepository.ValidateUserCredentials(authenticationRequestBody.PhoneNumber,
-                authenticationRequestBody.Password);
+                Hashing.GetSha256Hash(authenticationRequestBody.Password));
             if (user == null)
             {
                 return Unauthorized();
