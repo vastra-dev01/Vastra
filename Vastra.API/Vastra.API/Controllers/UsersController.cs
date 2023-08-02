@@ -68,6 +68,10 @@ namespace Vastra.API.Controllers
             //set date added and date modified for new user
             finalUser.DateAdded = DateTime.Now;
             finalUser.DateModified = DateTime.Now;
+            //hash password
+            var password = finalUser.Password;
+            var hashedPassword = Hashing.GetSha256Hash(password);
+            finalUser.Password = hashedPassword;
 
             await _vastraRepository.AddUserForRole(roleId, finalUser);
             await _vastraRepository.SaveChangesAsync();
