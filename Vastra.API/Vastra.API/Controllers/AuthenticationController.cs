@@ -39,7 +39,7 @@ namespace Vastra.API.Controllers
                 securityKey, SecurityAlgorithms.HmacSha256 );
             //Step 4: claims
             var claimsForToken = new List<Claim>();
-            claimsForToken.Add(new Claim("role", roleName));
+            claimsForToken.Add(new Claim(ClaimTypes.Role, roleName));
             claimsForToken.Add(new Claim("first_name", user.FirstName));
             claimsForToken.Add(new Claim("last_name", user.LastName?? ""));
             claimsForToken.Add(new Claim("phone", user.PhoneNumber));

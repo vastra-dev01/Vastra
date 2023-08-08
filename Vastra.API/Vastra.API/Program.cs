@@ -1,4 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using Vastra.API.DBContexts;
 using Vastra.API.Services;
@@ -38,8 +39,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("MustBeAdmin", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireClaim("role", "Admin");
+        policy.RequireRole("Admin");
     });
+    //options.AddPolicy("MustBeTheSameUser", policy =>
+    //{
+    //    policy.RequireAuthenticatedUser();
+    //    policy.RequireClaim("phone","");
+    //});
 });
 var app = builder.Build();
 
