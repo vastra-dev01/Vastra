@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Vastra.API.DBContexts;
 using Vastra.API.Entities;
 
@@ -495,6 +496,25 @@ namespace Vastra.API.Services
                 return null;
             }
             return await _context.Users.Where(u => u.PhoneNumber.Equals(phone) && u.Password.Equals(password)).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> ValidateUserClaim(ClaimsPrincipal User, int userId)
+        {
+            var userEntity = await GetUserAsync(userId);
+            if(userEntity == null)
+            {
+                return false;
+            }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if (claimedPhoneNumber == null)
+            {
+                return false;
+            }
+            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

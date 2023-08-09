@@ -49,12 +49,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
-            if(claimedPhoneNumber == null)
-            {
-                return Forbid();
-            }
-            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            if(!await _vastraRepository.ValidateUserClaim(User, userId))
             {
                 return Forbid();
             }
@@ -123,12 +118,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
-            if (claimedPhoneNumber == null)
-            {
-                return Forbid();
-            }
-            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
                 return Forbid();
             }
@@ -152,12 +142,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
-            if (claimedPhoneNumber == null)
-            {
-                return Forbid();
-            }
-            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
                 return Forbid();
             }
@@ -191,12 +176,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
-            if (claimedPhoneNumber == null)
-            {
-                return Forbid();
-            }
-            if (!claimedPhoneNumber.Value.Equals(userToDelete.PhoneNumber))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
                 return Forbid();
             }

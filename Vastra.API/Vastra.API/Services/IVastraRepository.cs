@@ -1,4 +1,5 @@
-﻿using Vastra.API.Entities;
+﻿using System.Security.Claims;
+using Vastra.API.Entities;
 
 namespace Vastra.API.Services
 {
@@ -93,6 +94,7 @@ namespace Vastra.API.Services
 
         #region authentication
         Task<User?> ValidateUserCredentials(string phone, string password);
+        Task<bool> ValidateUserClaim(ClaimsPrincipal User, int userId);
         #endregion authentication
 
         #region common

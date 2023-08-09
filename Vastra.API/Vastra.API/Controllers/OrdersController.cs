@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace Vastra.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders(int roleId, int userId, int pageNumber = 1, int pageSize = 10)
         {
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -33,6 +35,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             if (pageSize > maxOrdersPageSize)
             {
@@ -46,6 +52,7 @@ namespace Vastra.API.Controllers
 
         [HttpHead("{orderId}")]
         [HttpGet("{orderId}", Name = "GetOrder")]
+        [Authorize]
         public async Task<IActionResult> GetOrder(int roleId, int userId, int orderId, bool includeCartItems = false )
         {
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -55,6 +62,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             var order = await _vastraRepository.GetOrderForUserAsync(userId, orderId, includeCartItems);
             if (order == null)
@@ -72,6 +83,7 @@ namespace Vastra.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<OrderDto>> CreateOrder(int roleId, int userId, OrderForCreationDto order)
         {
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -81,6 +93,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             var finalorder = _mapper.Map<Entities.Order>(order);
 
@@ -129,6 +145,7 @@ namespace Vastra.API.Controllers
 */
 
         [HttpDelete]
+        [Authorize]
         public async Task<ActionResult> DeleteOrder(int roleId, int userId, int orderId)
         {
             if(!await _vastraRepository.RoleExistsAsync(roleId))
@@ -138,6 +155,10 @@ namespace Vastra.API.Controllers
             if(!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             var orderToDelete = await _vastraRepository.GetOrderForUserAsync(userId, orderId);
             if(orderToDelete == null)
