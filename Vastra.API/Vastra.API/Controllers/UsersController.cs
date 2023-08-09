@@ -110,6 +110,7 @@ namespace Vastra.API.Controllers
                 );
         }
         [HttpPut("{userId}")]
+        [Authorize]
         public async Task<ActionResult> UpdateUser(int roleId, int userId,
             UserForUpdateDto user)
         {
@@ -138,6 +139,7 @@ namespace Vastra.API.Controllers
             return NoContent();
         }
         [HttpPatch("{userId}")]
+        [Authorize]
         public async Task<ActionResult> PartiallyUpdateUser(int roleId, int userId,
             JsonPatchDocument<UserForUpdateDto> patchDocument)
         {
@@ -177,6 +179,7 @@ namespace Vastra.API.Controllers
 
         }
         [HttpDelete("{userId}")]
+        [Authorize]
         public async Task<ActionResult> DeleteUser(int roleId, int userId)
         {
             if (!await _vastraRepository.RoleExistsAsync(roleId))
