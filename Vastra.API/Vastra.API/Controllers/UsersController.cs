@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -22,6 +23,7 @@ namespace Vastra.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers(int roleId,
             string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
@@ -35,6 +37,7 @@ namespace Vastra.API.Controllers
         }
         [HttpHead]
         [HttpGet("{userId}", Name = "GetUser")]
+        [Authorize]
         public async Task<ActionResult<UserDto>> GetUser(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false)
         {
             if(!await _vastraRepository.RoleExistsAsync(roleId))
@@ -42,6 +45,19 @@ namespace Vastra.API.Controllers
                 return NotFound();
             }
             var userEntity = await _vastraRepository.GetUserByRoleAsync(roleId, userId, includeAddresses, includeOrders);
+            if(userEntity == null)
+            {
+                return NotFound();
+            }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if(claimedPhoneNumber == null)
+            {
+                return Forbid();
+            }
+            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            {
+                return Forbid();
+            }
             if(includeAddresses && includeOrders)
             {
                 return Ok(_mapper.Map<UserWithAddressesAndOrdersDto>(userEntity));
@@ -63,11 +79,22 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
+            var role = await _vastraRepository.GetRoleAsync(roleId);
+            if(role.RoleName == "Admin") {
+                if (!User.IsInRole("Admin"))
+                {
+                    return Forbid();
+                }
+            }
             var finalUser = _mapper.Map<Entities.User>(user);
 
             //set date added and date modified for new user
             finalUser.DateAdded = DateTime.Now;
             finalUser.DateModified = DateTime.Now;
+            //hash password
+            var password = finalUser.Password;
+            var hashedPassword = Hashing.GetSha256Hash(password);
+            finalUser.Password = hashedPassword;
 
             await _vastraRepository.AddUserForRole(roleId, finalUser);
             await _vastraRepository.SaveChangesAsync();
@@ -83,6 +110,7 @@ namespace Vastra.API.Controllers
                 );
         }
         [HttpPut("{userId}")]
+        [Authorize]
         public async Task<ActionResult> UpdateUser(int roleId, int userId,
             UserForUpdateDto user)
         {
@@ -95,6 +123,15 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if (claimedPhoneNumber == null)
+            {
+                return Forbid();
+            }
+            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            {
+                return Forbid();
+            }
             _mapper.Map(user, userEntity);
             //update Modified Time of product
             userEntity.DateModified = DateTime.Now;
@@ -102,6 +139,7 @@ namespace Vastra.API.Controllers
             return NoContent();
         }
         [HttpPatch("{userId}")]
+        [Authorize]
         public async Task<ActionResult> PartiallyUpdateUser(int roleId, int userId,
             JsonPatchDocument<UserForUpdateDto> patchDocument)
         {
@@ -113,6 +151,15 @@ namespace Vastra.API.Controllers
             if (userEntity == null)
             {
                 return NotFound();
+            }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if (claimedPhoneNumber == null)
+            {
+                return Forbid();
+            }
+            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            {
+                return Forbid();
             }
             var userToPatch = _mapper.Map<UserForUpdateDto>(userEntity);
             patchDocument.ApplyTo(userToPatch, ModelState);
@@ -132,6 +179,7 @@ namespace Vastra.API.Controllers
 
         }
         [HttpDelete("{userId}")]
+        [Authorize]
         public async Task<ActionResult> DeleteUser(int roleId, int userId)
         {
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -142,6 +190,15 @@ namespace Vastra.API.Controllers
             if (userToDelete == null)
             {
                 return NotFound();
+            }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if (claimedPhoneNumber == null)
+            {
+                return Forbid();
+            }
+            if (!claimedPhoneNumber.Value.Equals(userToDelete.PhoneNumber))
+            {
+                return Forbid();
             }
             _vastraRepository.DeleteUser(userToDelete);
             await _vastraRepository.SaveChangesAsync();

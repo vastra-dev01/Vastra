@@ -487,5 +487,14 @@ namespace Vastra.API.Services
         {
             return await _context.Roles.OrderBy(r => r.DateModified).ToListAsync();
         }
+
+        public async Task<User?> ValidateUserCredentials(string? phone, string? password)
+        {
+            if(string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(password))
+            {
+                return null;
+            }
+            return await _context.Users.Where(u => u.PhoneNumber.Equals(phone) && u.Password.Equals(password)).FirstOrDefaultAsync();
+        }
     }
 }

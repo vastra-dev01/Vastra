@@ -91,6 +91,10 @@ namespace Vastra.API.Services
 
         #endregion Address
 
+        #region authentication
+        Task<User?> ValidateUserCredentials(string phone, string password);
+        #endregion authentication
+
         #region common
 
         Task<bool> SaveChangesAsync();
