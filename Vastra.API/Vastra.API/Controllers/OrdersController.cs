@@ -23,8 +23,6 @@ namespace Vastra.API.Controllers
             _vastraRepository = vastraRepository;
             _mapper = mapper;
         }
-
-        // GET: api/Order
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders(int roleId, int userId, int pageNumber = 1, int pageSize = 10)
         {
@@ -32,7 +30,7 @@ namespace Vastra.API.Controllers
             { 
                 return NotFound();
             }
-            if (!await _vastraRepository.UserExistsAsync(userId))
+            if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
             }
@@ -40,9 +38,9 @@ namespace Vastra.API.Controllers
             {
                 pageSize = maxOrdersPageSize;
             }
-            var (orderEntities, paginationMetadata) = await _vastraRepository.GetOrdersAsync(
-                pageNumber, pageSize);
-            return Ok(_mapper.Map<IEnumerable<OrderDto>>(orderEntities));
+            var (orderEntities, paginationMetadata) = await _vastraRepository.GetOrdersForUserAsync(userId, pageSize, pageNumber);
+                
+            return Ok(_mapper.Map<IEnumerable<OrderWithoutCartItemsDto>>(orderEntities));
         }
 
 
@@ -54,20 +52,23 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            if (!await _vastraRepository.UserExistsAsync(userId))
+            if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
             }
-            if (!await _vastraRepository.OrderExistsAsync(orderId))
-            {
-                return NotFound();
-            }
-            var order = await _vastraRepository.GetOrderAsync(orderId, includeCartItems);
+            var order = await _vastraRepository.GetOrderForUserAsync(userId, orderId, includeCartItems);
             if (order == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<OrderWithoutCartItemsDto>(order));
+            if (includeCartItems)
+            {
+                return Ok(_mapper.Map<OrderDto>(order));
+            }
+            else
+            {
+                return Ok(_mapper.Map<OrderWithoutCartItemsDto>(order));
+            }
         }
 
         [HttpPost]
@@ -77,7 +78,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            if (!await _vastraRepository.UserExistsAsync(userId))
+            if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
             }
@@ -88,7 +89,7 @@ namespace Vastra.API.Controllers
             await _vastraRepository.AddOrderForUserAsync(userId, finalorder);
             await _vastraRepository.SaveChangesAsync();
 
-            var createdOrderToReturn = _mapper.Map<OrderDto>(finalorder);
+            var createdOrderToReturn = _mapper.Map<OrderWithoutCartItemsDto>(finalorder);
             return CreatedAtRoute("GetOrder",
                 new
                 {
@@ -98,7 +99,7 @@ namespace Vastra.API.Controllers
                 },
                 createdOrderToReturn
 
-                ); ;
+                );
         }
 /*
         [HttpPut]
@@ -134,7 +135,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            if(!await _vastraRepository.UserExistsAsync(userId))
+            if(!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
                 return NotFound();
             }

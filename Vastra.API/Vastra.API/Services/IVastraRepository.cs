@@ -12,14 +12,15 @@ namespace Vastra.API.Services
         Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false);
         Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId);
         Task<Address?> GetAddressForUserAsync(int userId, int addressId);
-        Task<IEnumerable<Order>?> GetOrdersForUserAsync(int userId);
-        Task<Order?> GetOrderForUserAsync(int userId, int orderId);
+        Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersForUserAsync(int userId, int pageNumber, int pageSize);
+        Task<Order?> GetOrderForUserAsync(int userId, int orderId, bool includeCartItems = false);
         Task AddOrderForUserAsync(int userId, Order order);
         Task AddAddressForUserAsync(int userId, Address address);
         Task AddUserForRole(int roleId, User user);
         Task UpdateUser(User user);
         void DeleteUser(User user);
         Task<bool> UserExistsAsync(int userId);
+        Task<bool> UserExistsWithRoleAsync(int roleId, int userId);
         #endregion User
 
         #region Role

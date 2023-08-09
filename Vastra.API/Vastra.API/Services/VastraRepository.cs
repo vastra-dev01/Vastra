@@ -210,8 +210,12 @@ namespace Vastra.API.Services
             return await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
         }
 
-        public async Task<Order?> GetOrderForUserAsync(int userId, int orderId)
+        public async Task<Order?> GetOrderForUserAsync(int userId, int orderId, bool includeCartItems = false)
         {
+            if (includeCartItems)
+            {
+                return await _context.Orders.Include(o => o.CartItems).Where(o => o.OrderId == orderId && o.UserId == userId).FirstOrDefaultAsync();
+            }
             return await _context.Orders
                 .Where(o => o.OrderId == orderId && o.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -233,9 +237,19 @@ namespace Vastra.API.Services
             return (collectionToReturn, paginationMetadata);
         }
 
-        public async Task<IEnumerable<Order>?> GetOrdersForUserAsync(int userId)
+        public async Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersForUserAsync(int userId, int pageNumber, int pageSize)
         {
-            return await _context.Orders.Where(o => o.UserId == userId).ToListAsync();
+            var collection = _context.Orders.Where(o => o.UserId == userId);
+            var totalPageSize = await collection.CountAsync();
+
+            var paginationMetadata = new PaginationMetadata(totalPageSize, pageSize, pageNumber);
+
+            var collectionToReturn = await collection.OrderByDescending(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Product?> GetProductAsync(int productId)
@@ -459,6 +473,10 @@ namespace Vastra.API.Services
         public async Task<bool> UserExistsAsync(int userId)
         {
             return await _context.Users.AnyAsync(u => u.UserId == userId);
+        }
+        public async Task<bool> UserExistsWithRoleAsync(int roleId, int userId)
+        {
+            return await _context.Users.AnyAsync(u => u.UserId == userId && u.RoleId == roleId);
         }
         public async Task<bool> RoleExistsAsync(int roleId)
         {
