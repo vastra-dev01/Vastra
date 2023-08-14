@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Vastra.API.DBContexts;
 using Vastra.API.Entities;
 
@@ -210,8 +211,12 @@ namespace Vastra.API.Services
             return await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
         }
 
-        public async Task<Order?> GetOrderForUserAsync(int userId, int orderId)
+        public async Task<Order?> GetOrderForUserAsync(int userId, int orderId, bool includeCartItems = false)
         {
+            if (includeCartItems)
+            {
+                return await _context.Orders.Include(o => o.CartItems).Where(o => o.OrderId == orderId && o.UserId == userId).FirstOrDefaultAsync();
+            }
             return await _context.Orders
                 .Where(o => o.OrderId == orderId && o.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -233,9 +238,19 @@ namespace Vastra.API.Services
             return (collectionToReturn, paginationMetadata);
         }
 
-        public async Task<IEnumerable<Order>?> GetOrdersForUserAsync(int userId)
+        public async Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersForUserAsync(int userId, int pageNumber, int pageSize)
         {
-            return await _context.Orders.Where(o => o.UserId == userId).ToListAsync();
+            var collection = _context.Orders.Where(o => o.UserId == userId);
+            var totalPageSize = await collection.CountAsync();
+
+            var paginationMetadata = new PaginationMetadata(totalPageSize, pageSize, pageNumber);
+
+            var collectionToReturn = await collection.OrderByDescending(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Product?> GetProductAsync(int productId)
@@ -460,6 +475,10 @@ namespace Vastra.API.Services
         {
             return await _context.Users.AnyAsync(u => u.UserId == userId);
         }
+        public async Task<bool> UserExistsWithRoleAsync(int roleId, int userId)
+        {
+            return await _context.Users.AnyAsync(u => u.UserId == userId && u.RoleId == roleId);
+        }
         public async Task<bool> RoleExistsAsync(int roleId)
         {
             return await _context.Roles.AnyAsync(r => r.RoleId == roleId);
@@ -468,6 +487,34 @@ namespace Vastra.API.Services
         public async Task<IEnumerable<Role>> GetRolesAsync()
         {
             return await _context.Roles.OrderBy(r => r.DateModified).ToListAsync();
+        }
+
+        public async Task<User?> ValidateUserCredentials(string? phone, string? password)
+        {
+            if(string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(password))
+            {
+                return null;
+            }
+            return await _context.Users.Where(u => u.PhoneNumber.Equals(phone) && u.Password.Equals(password)).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> ValidateUserClaim(ClaimsPrincipal User, int userId)
+        {
+            var userEntity = await GetUserAsync(userId);
+            if(userEntity == null)
+            {
+                return false;
+            }
+            var claimedPhoneNumber = User.Claims.FirstOrDefault(c => c.Type.Equals("phone"));
+            if (claimedPhoneNumber == null)
+            {
+                return false;
+            }
+            if (!claimedPhoneNumber.Value.Equals(userEntity.PhoneNumber))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

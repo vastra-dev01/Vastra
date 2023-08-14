@@ -1,3 +1,6 @@
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 using Vastra.API.DBContexts;
 using Vastra.API.Services;
 
@@ -16,6 +19,34 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<VastraContext>();
 builder.Services.AddScoped<IVastraRepository, VastraRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    }
+    );
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustBeAdmin", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Admin");
+    });
+    //options.AddPolicy("MustBeTheSameUser", policy =>
+    //{
+    //    policy.RequireAuthenticatedUser();
+    //    policy.RequireClaim("phone","");
+    //});
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

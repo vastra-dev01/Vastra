@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vastra.API.Models;
 using Vastra.API.Models.ForCreationAndUpdate;
@@ -8,6 +9,7 @@ namespace Vastra.API.Controllers
 {
     [ApiController]
     [Route("api/roles")]
+    [Authorize(Policy = "MustBeAdmin")]
     public class RolesController : ControllerBase
     {
         private readonly IVastraRepository _vastraRepository;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -56,6 +57,7 @@ namespace Vastra.API.Controllers
             return Ok(_mapper.Map<CategoryDto>(categoryEntity));
         }
         [HttpPost]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryForCreationDto category)
         {
             var finalCategory = _mapper.Map<Entities.Category>(category);
@@ -75,6 +77,7 @@ namespace Vastra.API.Controllers
                 );
         }
         [HttpPut("{categoryId}")]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult> UpdateCategory(int categoryId,
             CategoryForUpdateDto category)
         {
@@ -94,6 +97,7 @@ namespace Vastra.API.Controllers
             return NoContent();
         }
         [HttpPatch("{categoryId}")]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult> PartiallyUpdateCategory(int categoryId,
             JsonPatchDocument<CategoryForUpdateDto> patchDocument)
         {
@@ -124,6 +128,7 @@ namespace Vastra.API.Controllers
 
         }
         [HttpDelete("{categoryId}")]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult> DeleteCategory(int categoryId) {
             if(!await _vastraRepository.CategoryExistsAsync(categoryId))
             {
@@ -146,7 +151,9 @@ namespace Vastra.API.Controllers
         }
         //[HttpGet("{categoryId}/subCategories/{subCategoryId}")]
         //public async Task<ActionResult<CategoryDto>>  -- This is not needed currently as indivisual category can be fetched by GetCategory GET method
+
         [HttpPost("{categoryId}/subCategories")]
+        [Authorize(Policy = "MustBeAdmin")]
         public async Task<ActionResult<CategoryDto>> CreateSubCategory(int categoryId, CategoryForCreationDto subCategory)
         {
             if(!await _vastraRepository.CategoryExistsAsync(categoryId))

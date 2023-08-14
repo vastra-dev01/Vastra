@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -49,6 +50,7 @@ namespace Vastra.API.Controllers
             }
             return Ok(_mapper.Map<ProductDto>(product));
         }
+        [Authorize(Policy = "MustBeAdmin")]
         [HttpPost]
         public async Task<ActionResult<ProductDto>> CreateProduct(int categoryId,
             ProductForCreationDto product)
@@ -77,6 +79,7 @@ namespace Vastra.API.Controllers
             createdProductToReturn
             );
         }
+        [Authorize(Policy = "MustBeAdmin")]
         [HttpPut("{productId}")]
         public async Task<ActionResult> UpdateProduct(int categoryId, int productId,
             ProductForUpdateDto product)
@@ -96,6 +99,7 @@ namespace Vastra.API.Controllers
             await _vastraRepository.SaveChangesAsync();
             return NoContent();
         }
+        [Authorize(Policy = "MustBeAdmin")]
         [HttpPatch("{productId}")]
         public async Task<ActionResult> PartiallyUpdateProduct(int categoryId, int productId,
             JsonPatchDocument<ProductForUpdateDto> patchDocument)
@@ -127,6 +131,7 @@ namespace Vastra.API.Controllers
 
         }
 
+        [Authorize(Policy = "MustBeAdmin")]
         [HttpDelete("{productId}")]
         public async Task<ActionResult> DeleteProduct(int categoryId, int productId)
         {
