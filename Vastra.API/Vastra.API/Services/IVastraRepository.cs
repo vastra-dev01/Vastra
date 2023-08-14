@@ -49,12 +49,13 @@ namespace Vastra.API.Services
 
         Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersAsync(int pageNumber, int pageSize);
         Task<Order?> GetOrderAsync(int orderId, bool includeCartItems = false);
-        Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId);
+        Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageNumber, int pageSize);
         Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId);
         Task AddCartItemForOrderAsync(int orderId, CartItem cartItem);
         Task UpdateOrderAsync(Order order);
         void DeleteOrder(Order order);
         Task<bool> OrderExistsAsync(int orderId);
+        Task<bool> OrderExistsForUser(int userId, int orderId);
 
 
         #endregion Order

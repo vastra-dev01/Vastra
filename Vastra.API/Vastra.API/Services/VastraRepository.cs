@@ -146,9 +146,18 @@ namespace Vastra.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId)
+        public async Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageSize, int pageNumber)
         {
-            return await _context.CartItems.Where(c => c.OrderId == orderId).ToListAsync();
+            var collection = _context.CartItems.Where(c => c.OrderId == orderId);
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
@@ -515,6 +524,11 @@ namespace Vastra.API.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<bool> OrderExistsForUser(int userId, int orderId)
+        {
+            return await _context.Orders.AnyAsync(o => o.UserId == userId && o.OrderId == orderId);
         }
     }
 }
