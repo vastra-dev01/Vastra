@@ -11,7 +11,7 @@ namespace Vastra.API.Services
         Task<User?> GetUserByRoleAsync(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false); 
         Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false);
         Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false);
-        Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId);
+        Task<(IEnumerable<Address>, PaginationMetadata)> GetAddressesForUserAsync(int userId, int pageNumber, int pageSize);
         Task<Address?> GetAddressForUserAsync(int userId, int addressId);
         Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersForUserAsync(int userId, int pageNumber, int pageSize);
         Task<Order?> GetOrderForUserAsync(int userId, int orderId, bool includeCartItems = false);

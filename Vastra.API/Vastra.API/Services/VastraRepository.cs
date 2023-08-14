@@ -127,9 +127,18 @@ namespace Vastra.API.Services
             _context.Users.Remove(user);
         }
 
-        public async Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId)
+        public async Task<(IEnumerable<Address>, PaginationMetadata)> GetAddressesForUserAsync(int userId, int pageNumber, int pageSize)
         {
-            return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
+            var collection = _context.Addresses.Where(a => a.UserId == userId);
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
+
         }
 
         public async Task<Address?> GetAddressForUserAsync(int userId, int addressId)
