@@ -148,16 +148,32 @@ namespace Vastra.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId)
+        public async Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId, bool includeProduct = false)
         {
+            if (includeProduct)
+            {
+                return await _context.CartItems
+                .Include(c => c.Product)
+                .Where(c => c.OrderId == orderId && c.CartItemId == cartItemId)
+                .FirstOrDefaultAsync();
+            }
             return await _context.CartItems
                 .Where(c => c.OrderId == orderId && c.CartItemId == cartItemId)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId)
+        public async Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageSize, int pageNumber)
         {
-            return await _context.CartItems.Where(c => c.OrderId == orderId).ToListAsync();
+            var collection = _context.CartItems.Where(c => c.OrderId == orderId);
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
@@ -524,6 +540,16 @@ namespace Vastra.API.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<bool> OrderExistsForUser(int userId, int orderId)
+        {
+            return await _context.Orders.AnyAsync(o => o.UserId == userId && o.OrderId == orderId);
+        }
+
+        public async Task<CartItem?> ProductExistsAsACartItemForOrder(int orderId, int productId)
+        {
+            return await _context.CartItems.FirstOrDefaultAsync(c => c.OrderId ==  orderId && c.ProductId == productId);
         }
     }
 }
