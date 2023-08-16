@@ -57,6 +57,7 @@ namespace Vastra.API.Services
         void DeleteOrder(Order order);
         Task<bool> OrderExistsAsync(int orderId);
         Task<bool> OrderExistsForUser(int userId, int orderId);
+        void UpdateAmountForOrder(int orderId, float amount);
 
 
         #endregion Order

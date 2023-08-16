@@ -43,7 +43,7 @@ namespace Vastra.API.Controllers
             {
                 pageSize = maxAddressesPageSize;
             }
-            var (addressEntities, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, pageSize, pageNumber);
+            var (addressEntities, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, pageNumber, pageSize);
 
             return Ok(_mapper.Map<IEnumerable<AddressDto>>(addressEntities));
         }
@@ -117,7 +117,7 @@ namespace Vastra.API.Controllers
                 {
                     roleId = roleId,
                     userId = userId,
-                    orderId = createdAddressToReturn.AddressId
+                    addressId = createdAddressToReturn.AddressId
                 },
                 createdAddressToReturn
 

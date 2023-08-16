@@ -102,12 +102,12 @@ namespace Vastra.API.Controllers
             var existingCartItem = await _vastraRepository.ProductExistsAsACartItemForOrder(orderId, cartItem.ProductId);
             if (existingCartItem != null)
             {
-                await UpdateCartItem(roleId, userId, orderId, existingCartItem.CartItemId,
+                return await UpdateCartItem(roleId, userId, orderId, existingCartItem.CartItemId,
                 new CartItemForUpdateDto
                 {
                     Quantity = cartItem.Quantity
                 });
-                return NoContent();
+                
             }
             //check if added quantity is available
             if(cartItem.Quantity > product.Quantity)
@@ -116,9 +116,16 @@ namespace Vastra.API.Controllers
             }
             var finalCartItem = _mapper.Map<Entities.CartItem>(cartItem);
 
+            //set date added and date modified for newly created cart item
             finalCartItem.DateAdded = DateTime.Now;
             finalCartItem.DateModified = DateTime.Now;
+
+            //add cart item to order
             await _vastraRepository.AddCartItemForOrderAsync(orderId, finalCartItem);
+
+            //update order value
+            _vastraRepository.UpdateAmountForOrder(orderId, product.Price * cartItem.Quantity);
+            //save changes to db
             await _vastraRepository.SaveChangesAsync();
 
             var createdCartItemToReturn = _mapper.Map<CartItemDto>(finalCartItem);
@@ -160,6 +167,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound(cartItemId);
             }
+            int old_quantity = cartItemEntity.Quantity;
             //check if modified quantity is available
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
@@ -173,6 +181,9 @@ namespace Vastra.API.Controllers
             _mapper.Map(cartItem, cartItemEntity);
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
+            //update order value
+            float amount = (cartItem.Quantity - old_quantity) * product.Price;
+            _vastraRepository.UpdateAmountForOrder(orderId, amount);
             await _vastraRepository.SaveChangesAsync();
             return NoContent();
         }
@@ -203,6 +214,7 @@ namespace Vastra.API.Controllers
             {
                 return NotFound(cartItemId);
             }
+            int old_quantity = cartItemEntity.Quantity;
             //check if modified quantity is available
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
@@ -227,6 +239,9 @@ namespace Vastra.API.Controllers
             _mapper.Map(cartItemToPatch, cartItemEntity);
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
+            //update order value
+            float amount = (cartItemToPatch.Quantity - old_quantity) * product.Price;
+            _vastraRepository.UpdateAmountForOrder(orderId, amount);
             await _vastraRepository.SaveChangesAsync();
             return NoContent();
         }
@@ -257,6 +272,10 @@ namespace Vastra.API.Controllers
                 return NotFound(cartItemId);
             }
             _vastraRepository.DeleteCartItem(cartItemToBeDeleted);
+            //update order value
+            var product = await _vastraRepository.GetProductAsync(cartItemToBeDeleted.ProductId);
+            float amount = (cartItemToBeDeleted.Quantity) * product.Price;
+            _vastraRepository.UpdateAmountForOrder(orderId, -1*amount);
             await _vastraRepository.SaveChangesAsync();
             return NoContent();
         }

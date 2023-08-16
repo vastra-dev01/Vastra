@@ -7,6 +7,6 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         [Required(ErrorMessage = "Please provide order value")]
         public int Value { get; set; }
 
-        public String PaymentStatus { get; set; }
+        //public String PaymentStatus { get; set; }
     }
 }

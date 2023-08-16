@@ -551,5 +551,17 @@ namespace Vastra.API.Services
         {
             return await _context.CartItems.FirstOrDefaultAsync(c => c.OrderId ==  orderId && c.ProductId == productId);
         }
+
+        public async void UpdateAmountForOrder(int orderId, float amount)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+            if(order == null)
+            {
+                return;
+            }
+            int pre_value = order.Value;
+            int post_value = (int)(pre_value + amount);
+            order.Value = post_value;
+        }
     }
 }
