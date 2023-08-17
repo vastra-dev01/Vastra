@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vastra.API.Migrations
 {
-    public partial class fresh_21072023 : Migration
+    public partial class fresh_18_08_2023 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -134,7 +134,7 @@ namespace Vastra.API.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<float>(type: "real", nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -158,6 +158,7 @@ namespace Vastra.API.Migrations
                     CartItemId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<float>(type: "real", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -183,42 +184,54 @@ namespace Vastra.API.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 1, "Men", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9521), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9534), null });
+                values: new object[,]
+                {
+                    { 1, "Men", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5404), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5424), null },
+                    { 2, "Women", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5427), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5428), null },
+                    { 3, "Kids", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5431), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5432), null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "RoleId", "DateAdded", "DateModified", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5791), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5793), "Admin" },
+                    { 2, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5796), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5798), "User" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 2, "Women", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9537), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9539), null });
+                values: new object[,]
+                {
+                    { 4, "T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5434), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5435), 1 },
+                    { 6, "Tops", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5441), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5442), 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "DateAdded", "DateModified", "EmailId", "FirstName", "LastName", "Password", "PhoneNumber", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6245), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6248), "admin@vastra.com", "admin", "admin", "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=", "9661734253", 1 },
+                    { 2, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6354), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6356), "User1@vastra.com", "Sumit", "Ranjan", "sMkwGjEJzLviG2lXyrFPM2pISrmuqnel/t9MV2Itvs0=", "8804225153", 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 3, "Kids", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9541), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9542), null });
+                values: new object[] { 5, "Full Sleeve T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5438), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5439), 4 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 4, "T Shirts", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9544), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9545), 1 });
+                values: new object[] { 7, "French Tops", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5445), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5446), 6 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 6, "Tops", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9551), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9552), 2 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 5, "Full Sleeve T Shirts", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9547), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9549), 4 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 7, "French Tops", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9554), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9555), 6 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 8, "Half Sleeve T Shirts", new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9557), new DateTime(2023, 7, 21, 17, 44, 24, 937, DateTimeKind.Local).AddTicks(9558), 4 });
+                values: new object[] { 8, "Half Sleeve T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5448), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5449), 4 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",

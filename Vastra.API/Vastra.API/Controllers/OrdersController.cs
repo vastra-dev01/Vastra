@@ -100,11 +100,18 @@ namespace Vastra.API.Controllers
                 return Forbid();
             }
             var finalorder = _mapper.Map<Entities.Order>(order);
-            //set date added and date modified fro newly created order
+
+            //set date added and date modified for newly created order
             finalorder.DateAdded = DateTime.Now;
             finalorder.DateModified = DateTime.Now;
+
             //set payment status as pending
             finalorder.PaymentStatus = PaymentStatus.Pending.ToString();
+
+            //set initial value as 0
+            finalorder.Value = 0;
+
+            //create order for user
             await _vastraRepository.AddOrderForUserAsync(userId, finalorder);
             await _vastraRepository.SaveChangesAsync();
 

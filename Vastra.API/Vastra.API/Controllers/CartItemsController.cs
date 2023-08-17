@@ -116,6 +116,9 @@ namespace Vastra.API.Controllers
             }
             var finalCartItem = _mapper.Map<Entities.CartItem>(cartItem);
 
+            //set value of cart item
+            finalCartItem.Value = product.Price * cartItem.Quantity;
+
             //set date added and date modified for newly created cart item
             finalCartItem.DateAdded = DateTime.Now;
             finalCartItem.DateModified = DateTime.Now;
@@ -123,10 +126,11 @@ namespace Vastra.API.Controllers
             //add cart item to order
             await _vastraRepository.AddCartItemForOrderAsync(orderId, finalCartItem);
 
-            //update order value
-            _vastraRepository.UpdateAmountForOrder(orderId, product.Price * cartItem.Quantity);
             //save changes to db
             await _vastraRepository.SaveChangesAsync();
+
+            //update order value
+            _vastraRepository.UpdateAmountForOrder(orderId);
 
             var createdCartItemToReturn = _mapper.Map<CartItemDto>(finalCartItem);
             return CreatedAtRoute("GetCartItem",
@@ -167,7 +171,6 @@ namespace Vastra.API.Controllers
             {
                 return NotFound(cartItemId);
             }
-            int old_quantity = cartItemEntity.Quantity;
             //check if modified quantity is available
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
@@ -179,12 +182,17 @@ namespace Vastra.API.Controllers
                 return BadRequest();
             }
             _mapper.Map(cartItem, cartItemEntity);
+
+            //update Value of cart item
+            cartItemEntity.Value = cartItem.Quantity * product.Price;
+
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
-            //update order value
-            float amount = (cartItem.Quantity - old_quantity) * product.Price;
-            _vastraRepository.UpdateAmountForOrder(orderId, amount);
+            
             await _vastraRepository.SaveChangesAsync();
+
+            //update order value
+            _vastraRepository.UpdateAmountForOrder(orderId);
             return NoContent();
         }
         [HttpPatch("{cartItemId}")]
@@ -214,7 +222,6 @@ namespace Vastra.API.Controllers
             {
                 return NotFound(cartItemId);
             }
-            int old_quantity = cartItemEntity.Quantity;
             //check if modified quantity is available
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
@@ -237,12 +244,18 @@ namespace Vastra.API.Controllers
                 return BadRequest(ModelState);
             }
             _mapper.Map(cartItemToPatch, cartItemEntity);
+
+            //update value of cart item
+            cartItemEntity.Value = cartItemToPatch.Quantity * product.Price;
+
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
-            //update order value
-            float amount = (cartItemToPatch.Quantity - old_quantity) * product.Price;
-            _vastraRepository.UpdateAmountForOrder(orderId, amount);
+            
             await _vastraRepository.SaveChangesAsync();
+
+            //update order value
+            _vastraRepository.UpdateAmountForOrder(orderId);
+
             return NoContent();
         }
         [HttpDelete("{cartItemId}")]
@@ -272,11 +285,12 @@ namespace Vastra.API.Controllers
                 return NotFound(cartItemId);
             }
             _vastraRepository.DeleteCartItem(cartItemToBeDeleted);
-            //update order value
-            var product = await _vastraRepository.GetProductAsync(cartItemToBeDeleted.ProductId);
-            float amount = (cartItemToBeDeleted.Quantity) * product.Price;
-            _vastraRepository.UpdateAmountForOrder(orderId, -1*amount);
+            
             await _vastraRepository.SaveChangesAsync();
+
+            //update order value
+            _vastraRepository.UpdateAmountForOrder(orderId);
+
             return NoContent();
         }
 

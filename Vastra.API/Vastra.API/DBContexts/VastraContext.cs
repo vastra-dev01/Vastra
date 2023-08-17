@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Vastra.API.Entities;
+using Vastra.API.Services;
 
 namespace Vastra.API.DBContexts
 {
@@ -34,6 +35,7 @@ namespace Vastra.API.DBContexts
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull); //TODO : Delete not working
 
+            //sample category data
             modelBuilder.Entity<Category>().HasData(
             new Category("Men")
             {
@@ -89,6 +91,50 @@ namespace Vastra.API.DBContexts
                 DateModified = DateTime.Now
             }
             );
+
+            //pre-defined roles
+            modelBuilder.Entity<Role>().HasData(
+            new Role()
+            {
+                RoleName = "Admin",
+                RoleId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now,
+            },
+            new Role()
+            {
+                RoleName = "User",
+                RoleId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now
+            }
+                );
+
+            //pre-defined users
+            modelBuilder.Entity<User>().HasData(
+            new User(_configuration["SampleUsers:AdminFirstName"], 
+            _configuration["SampleUsers:AdminLastName"], 
+            _configuration["SampleUsers:AdminPhone"], 
+            Hashing.GetSha256Hash(_configuration["SampleUsers:AdminPassword"]))
+            {
+                UserId = 1,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now,
+                RoleId = 1,
+                EmailId = _configuration["SampleUsers:AdminEmail"]
+            },
+            new User(_configuration["SampleUsers:User1FirstName"],
+            _configuration["SampleUsers:User1LastName"],
+            _configuration["SampleUsers:User1Phone"],
+            Hashing.GetSha256Hash(_configuration["SampleUsers:User1Password"]))
+            {
+                UserId = 2,
+                DateAdded = DateTime.Now,
+                DateModified = DateTime.Now,
+                RoleId = 2,
+                EmailId = _configuration["SampleUsers:User1Email"]
+            }
+                );
             base.OnModelCreating(modelBuilder);
         }
 
