@@ -43,7 +43,7 @@ namespace Vastra.API.Controllers
             }
             var (cartItemEntities, paginationMetadata) = await _vastraRepository.GetCartItemsForOrderAsync(orderId, pageNumber, pageSize);
             
-            return Ok(_mapper.Map<CartItemDto>(cartItemEntities));
+            return Ok(_mapper.Map<IEnumerable<CartItemDto>>(cartItemEntities));
         }
         [HttpHead("{cartItemId}")]
         [HttpGet("{cartItemId}", Name = "GetCartItem")]
@@ -132,6 +132,9 @@ namespace Vastra.API.Controllers
             //update order value
             _vastraRepository.UpdateAmountForOrder(orderId);
 
+            ////save changes to db
+            //await _vastraRepository.SaveChangesAsync();
+
             var createdCartItemToReturn = _mapper.Map<CartItemDto>(finalCartItem);
             return CreatedAtRoute("GetCartItem",
                 new
@@ -193,6 +196,10 @@ namespace Vastra.API.Controllers
 
             //update order value
             _vastraRepository.UpdateAmountForOrder(orderId);
+
+            ////save changes to db
+            //await _vastraRepository.SaveChangesAsync();
+
             return NoContent();
         }
         [HttpPatch("{cartItemId}")]
@@ -256,6 +263,9 @@ namespace Vastra.API.Controllers
             //update order value
             _vastraRepository.UpdateAmountForOrder(orderId);
 
+            ////save changes to db
+            //await _vastraRepository.SaveChangesAsync();
+
             return NoContent();
         }
         [HttpDelete("{cartItemId}")]
@@ -290,6 +300,9 @@ namespace Vastra.API.Controllers
 
             //update order value
             _vastraRepository.UpdateAmountForOrder(orderId);
+
+            ////save changes to db
+            //await _vastraRepository.SaveChangesAsync();
 
             return NoContent();
         }

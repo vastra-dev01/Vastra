@@ -162,7 +162,7 @@ namespace Vastra.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageSize, int pageNumber)
+        public async Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageNumber, int pageSize)
         {
             var collection = _context.CartItems.Where(c => c.OrderId == orderId);
             var totalItemCount = await collection.CountAsync();
@@ -565,7 +565,7 @@ namespace Vastra.API.Services
                 value += c.Value;
             }
             order.Value = value;
-            await _context.SaveChangesAsync();
+            await SaveChangesAsync();
         }
     }
 }
