@@ -126,14 +126,12 @@ namespace Vastra.API.Controllers
             //add cart item to order
             await _vastraRepository.AddCartItemForOrderAsync(orderId, finalCartItem);
 
+            //update order value
+            var oldOrderValue = order.Value;
+            order.Value = oldOrderValue + finalCartItem.Value;
+
             //save changes to db
             await _vastraRepository.SaveChangesAsync();
-
-            //update order value
-            _vastraRepository.UpdateAmountForOrder(orderId);
-
-            ////save changes to db
-            //await _vastraRepository.SaveChangesAsync();
 
             var createdCartItemToReturn = _mapper.Map<CartItemDto>(finalCartItem);
             return CreatedAtRoute("GetCartItem",
@@ -184,6 +182,9 @@ namespace Vastra.API.Controllers
             {
                 return BadRequest();
             }
+            
+            float oldCartItemValue = cartItemEntity.Value;
+
             _mapper.Map(cartItem, cartItemEntity);
 
             //update Value of cart item
@@ -191,14 +192,13 @@ namespace Vastra.API.Controllers
 
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
-            
-            await _vastraRepository.SaveChangesAsync();
 
             //update order value
-            _vastraRepository.UpdateAmountForOrder(orderId);
+            var oldOrderValue = order.Value;
+            order.Value = oldOrderValue - oldCartItemValue + cartItemEntity.Value;
 
-            ////save changes to db
-            //await _vastraRepository.SaveChangesAsync();
+
+            await _vastraRepository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -240,7 +240,9 @@ namespace Vastra.API.Controllers
             {
                 return BadRequest();
             }
-            
+
+            float oldCartItemValue = cartItemEntity.Value;
+
             patchDocument.ApplyTo(cartItemToPatch, ModelState);
             if (!ModelState.IsValid)
             {
@@ -257,14 +259,15 @@ namespace Vastra.API.Controllers
 
             //update Modified Time of cartItem
             cartItemEntity.DateModified = DateTime.Now;
-            
-            await _vastraRepository.SaveChangesAsync();
 
             //update order value
-            _vastraRepository.UpdateAmountForOrder(orderId);
+            var oldOrderValue = order.Value;
+            order.Value = oldOrderValue - oldCartItemValue + cartItemEntity.Value;
 
-            ////save changes to db
-            //await _vastraRepository.SaveChangesAsync();
+            await _vastraRepository.SaveChangesAsync();
+
+            
+
 
             return NoContent();
         }
@@ -295,14 +298,12 @@ namespace Vastra.API.Controllers
                 return NotFound(cartItemId);
             }
             _vastraRepository.DeleteCartItem(cartItemToBeDeleted);
-            
-            await _vastraRepository.SaveChangesAsync();
 
             //update order value
-            _vastraRepository.UpdateAmountForOrder(orderId);
+            var oldOrderValue = order.Value;
+            order.Value = oldOrderValue - cartItemToBeDeleted.Value;
 
-            ////save changes to db
-            //await _vastraRepository.SaveChangesAsync();
+            await _vastraRepository.SaveChangesAsync();
 
             return NoContent();
         }

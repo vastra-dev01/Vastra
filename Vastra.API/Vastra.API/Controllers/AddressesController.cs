@@ -165,7 +165,10 @@ namespace Vastra.API.Controllers
                 var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId,1,100);
                 foreach (var address in addresses)
                 {
-                    address.Type = (int)AddressType.Secondary;
+                    if(addressEntity.AddressId != address.AddressId)
+                    {
+                        address.Type = (int)AddressType.Secondary;
+                    }
                 }
             }
             await _vastraRepository.SaveChangesAsync();
@@ -201,7 +204,10 @@ namespace Vastra.API.Controllers
                 var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);
                 foreach (var addressMember in addresses)
                 {
-                    addressMember.Type = (int)AddressType.Secondary;
+                    if (addressEntity.AddressId != addressMember.AddressId)
+                    {
+                        addressMember.Type = (int)AddressType.Secondary;
+                    }
                 }
             }
             await _vastraRepository.SaveChangesAsync();
@@ -227,6 +233,23 @@ namespace Vastra.API.Controllers
             if (addressToDelete == null)
             {
                 return NotFound();
+            }
+            var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);
+            Address addressToBeSet = null;
+            if (addressToDelete.Type == (int)AddressType.Primary && addresses.Count() > 1)
+            {
+                foreach(Address address in addresses)
+                {
+                    if(address.AddressId != addressToDelete.AddressId)
+                    {
+                        addressToBeSet = address;
+                        break;
+                    }
+                }
+            }
+            if(addressToBeSet != null)
+            {
+                addressToBeSet.Type = (int)AddressType.Primary;
             }
             _vastraRepository.DeleteAddress(addressToDelete);
             await _vastraRepository.SaveChangesAsync();
