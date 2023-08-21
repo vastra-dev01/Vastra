@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.XPath;
@@ -10,6 +11,7 @@ using Vastra.API.Services;
 
 namespace Vastra.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/roles/{roleId}/users/{userId}/orders/{orderId}/cartItems")]
     public class CartItemsController : Controller
@@ -37,7 +39,11 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
-            if(pageSize > maxCartItemPageSize)
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
+            }
+            if (pageSize > maxCartItemPageSize)
             {
                 pageSize = maxCartItemPageSize;
             }
@@ -60,6 +66,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             var cartItem = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId, includeProduct);
             if (includeProduct)
@@ -85,6 +95,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             //if order has been placed and payment done, cart items can't be added to it
             var order = await _vastraRepository.GetOrderAsync(orderId);
@@ -161,6 +175,10 @@ namespace Vastra.API.Controllers
             {
                 return NotFound();
             }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
+            }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
             if (order.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
@@ -217,6 +235,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
@@ -285,6 +307,10 @@ namespace Vastra.API.Controllers
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
                 return NotFound();
+            }
+            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            {
+                return Forbid();
             }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
