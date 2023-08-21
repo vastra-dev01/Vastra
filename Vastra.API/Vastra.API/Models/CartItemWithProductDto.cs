@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Vastra.API.Entities;
-
-namespace Vastra.API.Models
+﻿namespace Vastra.API.Models
 {
-    public class CartItemDto
+    public class CartItemWithProductDto
     {
         public int CartItemId { get; set; }
         public int ProductId { get; set; }
@@ -11,5 +8,6 @@ namespace Vastra.API.Models
         public float Value { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
+        public ProductDto Product { get; set; } = new ProductDto();
     }
 }

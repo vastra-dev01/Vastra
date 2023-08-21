@@ -20,7 +20,6 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         public string Country { get; set; }
         [MaxLength(50)]
         public string? Tag { get; set; }
-        [MaxLength(50)]
         public int? Type { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 using Vastra.API.DBContexts;
 using Vastra.API.Entities;
+using Vastra.API.Enums;
 using Vastra.API.Models;
 using Vastra.API.Models.ForCreationAndUpdate;
 using Vastra.API.Services;
@@ -100,8 +101,17 @@ namespace Vastra.API.Controllers
             }
             var finalorder = _mapper.Map<Entities.Order>(order);
 
+            //set date added and date modified for newly created order
             finalorder.DateAdded = DateTime.Now;
             finalorder.DateModified = DateTime.Now;
+
+            //set payment status as pending
+            finalorder.PaymentStatus = PaymentStatus.Pending.ToString();
+
+            //set initial value as 0
+            finalorder.Value = 0;
+
+            //create order for user
             await _vastraRepository.AddOrderForUserAsync(userId, finalorder);
             await _vastraRepository.SaveChangesAsync();
 
@@ -117,34 +127,34 @@ namespace Vastra.API.Controllers
 
                 );
         }
-/*
-        [HttpPut]
-        public async Task<ActionResult> UpdateOrder(int roleId, int userId, int orderId,
-            OrderForUpdateDto order)
-        {
-            if (!await _vastraRepository.RoleExistsAsync(roleId))
-            {
-                return NotFound();
-            }
-            if(!await _vastraRepository.UserExistsAsync(userId))
-            { 
-                return NotFound(); 
-            }
-            var orderEntity = await _vastraRepository.GetOrderForUserAsync(userId, orderId);
-            if (orderEntity == null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(order, orderEntity);
-            //update Modified Time of product
-            orderEntity.DateModified = DateTime.Now;
-            await _vastraRepository.SaveChangesAsync();
-            return NoContent();
 
-        }
-*/
+        //[HttpPut("{orderId}")]
+        //public async Task<ActionResult> UpdateOrder(int roleId, int userId, int orderId,
+        //    OrderForUpdateDto order)
+        //{
+        //    if (!await _vastraRepository.RoleExistsAsync(roleId))
+        //    {
+        //        return NotFound();
+        //    }
+        //    if(!await _vastraRepository.UserExistsAsync(userId))
+        //    { 
+        //        return NotFound(); 
+        //    }
+        //    var orderEntity = await _vastraRepository.GetOrderForUserAsync(userId, orderId);
+        //    if (orderEntity == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _mapper.Map(order, orderEntity);
+        //    //update Modified Time of product
+        //    orderEntity.DateModified = DateTime.Now;
+        //    await _vastraRepository.SaveChangesAsync();
+        //    return NoContent();
 
-        [HttpDelete]
+        //}
+
+
+        [HttpDelete("{orderId}")]
         [Authorize]
         public async Task<ActionResult> DeleteOrder(int roleId, int userId, int orderId)
         {
@@ -164,6 +174,11 @@ namespace Vastra.API.Controllers
             if(orderToDelete == null)
             {
                 return NotFound();
+            }
+            //if order has been placed and payment done, order can't be deleted
+            if (orderToDelete.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
+            {
+                return BadRequest();
             }
             _vastraRepository.DeleteOrder(orderToDelete);
             await _vastraRepository.SaveChangesAsync();

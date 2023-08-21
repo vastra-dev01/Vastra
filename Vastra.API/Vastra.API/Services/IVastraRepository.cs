@@ -11,7 +11,7 @@ namespace Vastra.API.Services
         Task<User?> GetUserByRoleAsync(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false); 
         Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, bool includeAddresses = false, bool includeOrders = false);
         Task<User?> GetUserAsync(int userId, bool includeAddresses = false, bool includeOrders = false);
-        Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId);
+        Task<(IEnumerable<Address>, PaginationMetadata)> GetAddressesForUserAsync(int userId, int pageNumber, int pageSize);
         Task<Address?> GetAddressForUserAsync(int userId, int addressId);
         Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersForUserAsync(int userId, int pageNumber, int pageSize);
         Task<Order?> GetOrderForUserAsync(int userId, int orderId, bool includeCartItems = false);
@@ -41,6 +41,7 @@ namespace Vastra.API.Services
         Task UpdateProductAsync(Product product);
         void DeleteProduct(Product product);
         Task<bool> ProductExistsAsync(int productId);
+        Task<CartItem?> ProductExistsAsACartItemForOrder(int orderId, int productId);
 
 
         #endregion Product
@@ -49,12 +50,13 @@ namespace Vastra.API.Services
 
         Task<(IEnumerable<Order>, PaginationMetadata)> GetOrdersAsync(int pageNumber, int pageSize);
         Task<Order?> GetOrderAsync(int orderId, bool includeCartItems = false);
-        Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId);
-        Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId);
+        Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageNumber, int pageSize);
+        Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId, bool includeProduct = false);
         Task AddCartItemForOrderAsync(int orderId, CartItem cartItem);
         Task UpdateOrderAsync(Order order);
         void DeleteOrder(Order order);
         Task<bool> OrderExistsAsync(int orderId);
+        Task<bool> OrderExistsForUser(int userId, int orderId);
 
 
         #endregion Order

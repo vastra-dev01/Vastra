@@ -25,6 +25,7 @@ namespace Vastra.API.Services
         public async Task AddCartItemForOrderAsync(int orderId, CartItem cartItem)
         {
             var order = await GetOrderAsync(orderId);
+
             if (order != null) { 
                 order.CartItems.Add(cartItem);
             }
@@ -127,9 +128,18 @@ namespace Vastra.API.Services
             _context.Users.Remove(user);
         }
 
-        public async Task<IEnumerable<Address>?> GetAddressesForUserAsync(int userId)
+        public async Task<(IEnumerable<Address>, PaginationMetadata)> GetAddressesForUserAsync(int userId, int pageNumber, int pageSize)
         {
-            return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
+            var collection = _context.Addresses.Where(a => a.UserId == userId);
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
+
         }
 
         public async Task<Address?> GetAddressForUserAsync(int userId, int addressId)
@@ -139,16 +149,32 @@ namespace Vastra.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId)
+        public async Task<CartItem?> GetCartItemForOrderAsync(int orderId, int cartItemId, bool includeProduct = false)
         {
+            if (includeProduct)
+            {
+                return await _context.CartItems
+                .Include(c => c.Product)
+                .Where(c => c.OrderId == orderId && c.CartItemId == cartItemId)
+                .FirstOrDefaultAsync();
+            }
             return await _context.CartItems
                 .Where(c => c.OrderId == orderId && c.CartItemId == cartItemId)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<CartItem>?> GetCartItemsForOrderAsync(int orderId)
+        public async Task<(IEnumerable<CartItem>, PaginationMetadata)> GetCartItemsForOrderAsync(int orderId, int pageNumber, int pageSize)
         {
-            return await _context.CartItems.Where(c => c.OrderId == orderId).ToListAsync();
+            var collection = _context.CartItems.Where(c => c.OrderId == orderId);
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageNumber, pageSize);
+
+            var collectionToReturn = await collection.OrderBy(c => c.DateModified)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<(IEnumerable<Category>, PaginationMetadata)> GetCategoriesAsync(int pageNumber, int pageSize)
@@ -516,5 +542,17 @@ namespace Vastra.API.Services
             }
             return true;
         }
+
+        public async Task<bool> OrderExistsForUser(int userId, int orderId)
+        {
+            return await _context.Orders.AnyAsync(o => o.UserId == userId && o.OrderId == orderId);
+        }
+
+        public async Task<CartItem?> ProductExistsAsACartItemForOrder(int orderId, int productId)
+        {
+            return await _context.CartItems.FirstOrDefaultAsync(c => c.OrderId ==  orderId && c.ProductId == productId);
+        }
+
+        
     }
 }

@@ -10,7 +10,7 @@ namespace Vastra.API.Entities
 
         public int Quantity { get; set; }
 
-        
+        public float Value { get; set; }
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
