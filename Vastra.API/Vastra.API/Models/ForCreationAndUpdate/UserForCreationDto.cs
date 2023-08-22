@@ -18,7 +18,8 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         public string? LastName { get; set; }
 
 
-        [Phone(ErrorMessage = "This does not appear to be a valid phone number")]
+        [Required(ErrorMessage = "Please provide Phone Number")]
+        [RegularExpression(@"^[6-9]\d{9}$", ErrorMessage = "Phone Number invalid")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Please provide password")]
