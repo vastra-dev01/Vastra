@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using System.Xml.Linq;
 using Vastra.API.DBContexts;
 using Vastra.API.Entities;
@@ -46,7 +47,9 @@ namespace Vastra.API.Controllers
                 pageSize = maxOrdersPageSize;
             }
             var (orderEntities, paginationMetadata) = await _vastraRepository.GetOrdersForUserAsync(userId, pageSize, pageNumber);
-                
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
             return Ok(_mapper.Map<IEnumerable<OrderWithoutCartItemsDto>>(orderEntities));
         }
 

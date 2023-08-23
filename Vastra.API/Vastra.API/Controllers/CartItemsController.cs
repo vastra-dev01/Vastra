@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using System.Xml.XPath;
 using Vastra.API.Entities;
 using Vastra.API.Enums;
@@ -49,6 +50,8 @@ namespace Vastra.API.Controllers
             }
             var (cartItemEntities, paginationMetadata) = await _vastraRepository.GetCartItemsForOrderAsync(orderId, pageNumber, pageSize);
             
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
             return Ok(_mapper.Map<IEnumerable<CartItemDto>>(cartItemEntities));
         }
         [HttpHead("{cartItemId}")]
