@@ -17,7 +17,7 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Please provide Size")]
-        [RegularExpression(@"^(M|S|L|XS|XL|XXL|XXXL)$")]
+        [RegularExpression(@"^(M|S|L|XS|XL|XXL|XXXL)$", ErrorMessage = "Size invalid(Only M|S|L|XS|XL|XXL|XXXL allowed)")]
         public string Size { get; set; }
 
 
@@ -42,7 +42,7 @@ namespace Vastra.API.Models.ForCreationAndUpdate
 
 
         [Required(ErrorMessage = "Please provide quantity for product")]
-        [RegularExpression(@"^[1-9]{1, 10}$", ErrorMessage = "Quantity Invalid")]
+        [RegularExpression(@"^[1-9]{1,10}$", ErrorMessage = "Quantity Invalid")]
         public int Quantity { get; set; }
 
 

@@ -42,7 +42,7 @@ namespace Vastra.API.Models.ForCreationAndUpdate
 
 
         [Required(ErrorMessage = "Please provide quantity for product")]
-        [RegularExpression(@"^[1-9]{1, 10}$", ErrorMessage = "Quantity Invalid")]
+        [RegularExpression(@"^[1-9]{1,10}$", ErrorMessage = "Quantity Invalid")]
         public int Quantity { get; set; }
         //public DateTime Modified { get; set; } = DateTime.Now;
     }

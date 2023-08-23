@@ -2,7 +2,7 @@
 
 namespace Vastra.API.Models.ForCreationAndUpdate
 {
-    public class AddressForUpdateDto : IValidatableObject
+    public class AddressForUpdateDto
     {
         [Required(ErrorMessage = "Please provide Location details")]
         [MinLength(10, ErrorMessage = "Provided Location details not enough")]
@@ -42,19 +42,19 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         [RegularExpression(@"^[-\w]+$", ErrorMessage = "Tag name should contain only alphabets, numbers, -, and _")]
         public string? Tag { get; set; }
 
-
+        [RegularExpression(@"^(0|1)$", ErrorMessage = "Type can only be 0(Primary) or 1(Secondary)")]
         public int? Type { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            //Type can only be 0 or 1
-            if (Type != 0 && Type != 1)
-            {
-                yield return new ValidationResult(
-                    "Type can only be 0(Primary) or 1(Secondary).",
-                    new[] { "Type" });
-            }
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    //Type can only be 0 or 1
+        //    if (Type != 0 && Type != 1)
+        //    {
+        //        yield return new ValidationResult(
+        //            "Type can only be 0(Primary) or 1(Secondary).",
+        //            new[] { "Type" });
+        //    }
 
-        }
+        //}
     }
 }

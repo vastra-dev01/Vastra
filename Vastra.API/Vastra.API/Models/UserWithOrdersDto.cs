@@ -12,7 +12,7 @@
 
         public string? EmailId { get; set; }
 
-        public ICollection<OrderDto> Orders { get; set; } = new List<OrderDto>();
+        public ICollection<OrderWithoutCartItemsDto> Orders { get; set; } = new List<OrderWithoutCartItemsDto>();
         public int NumberOfOrders
         {
             get
