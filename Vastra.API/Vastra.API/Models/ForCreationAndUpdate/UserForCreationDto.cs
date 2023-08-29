@@ -24,7 +24,7 @@ namespace Vastra.API.Models.ForCreationAndUpdate
 
         [Required(ErrorMessage = "Please provide password")]
         [RegularExpression(@"^(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])(?=\D*\d)(?=[^!@#%]*[!@#%])[A-Za-z0-9!#@%]{5,15}$", 
-         ErrorMessage = "Password should be between 5-15 characters containing at least one special character(!,# or %)")]
+         ErrorMessage = "Password should be between 5-15 characters containing at least one special character(!,#,@ or %)")]
         public string Password { get; set; }
 
 

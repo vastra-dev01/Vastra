@@ -118,7 +118,7 @@ namespace Vastra.API.Controllers
             finaladdress.DateAdded = DateTime.Now;
             finaladdress.DateModified = DateTime.Now;
 
-            _logger.LogInformation("Date Added = {DT} and Date Modified = {DT} set for newly created address in AddressesController.",
+            _logger.LogDebug("Date Added = {DT} and Date Modified = {DT} set for newly created address in AddressesController.",
                 finaladdress.DateAdded, finaladdress.DateModified);
 
 
