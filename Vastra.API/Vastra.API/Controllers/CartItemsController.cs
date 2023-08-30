@@ -7,6 +7,7 @@ using System.Xml.XPath;
 using Vastra.API.Entities;
 using Vastra.API.Enums;
 using Vastra.API.Models;
+using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
 using Vastra.API.Services;
 
@@ -146,7 +147,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"CartItem creation failed as payment has already been done " +
                     $"for orderId {orderId}.");
-                return BadRequest();
+                throw new UpdatePaidOrderException("Can't add cart item to a paid order.");
             }
             //check if product with product id given in cart item exists
             var product = await _vastraRepository.GetProductAsync(cartItem.ProductId);
@@ -176,7 +177,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"Quantity({cartItem.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
-                return BadRequest();
+                throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
             }
             var finalCartItem = _mapper.Map<Entities.CartItem>(cartItem);
 
@@ -253,7 +254,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"CartItem updation failed as payment has already been done " +
                     $"for orderId {orderId}.");
-                return BadRequest();
+                throw new UpdatePaidOrderException("Can't update cart item of a paid order.");
             }
             var cartItemEntity = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemEntity == null)
@@ -274,7 +275,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"Quantity({cartItem.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
-                return BadRequest();
+                throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
             }
             
             float oldCartItemValue = cartItemEntity.Value;
@@ -338,7 +339,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"CartItem updation failed as payment has already been done " +
                     $"for orderId {orderId}.");
-                return BadRequest();
+                throw new UpdatePaidOrderException("Can't update cart item of a paid order.");
             }
             var cartItemEntity = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemEntity == null)
@@ -360,7 +361,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"Quantity({cartItemToPatch.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
-                return BadRequest();
+                throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
             }
 
             float oldCartItemValue = cartItemEntity.Value;
@@ -433,7 +434,7 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"CartItem deletion failed as payment has already been done " +
                     $"for orderId {orderId}.");
-                return BadRequest();
+                throw new UpdatePaidOrderException("Can't delete a paid order.");
             }
             var cartItemToBeDeleted = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemToBeDeleted == null)

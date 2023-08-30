@@ -3,6 +3,7 @@ using Serilog;
 using System.Security.Claims;
 using System.Text;
 using Vastra.API.DBContexts;
+using Vastra.API.Middleware;
 using Vastra.API.Services;
 
 //Serilog configuration
@@ -58,6 +59,10 @@ builder.Services.AddAuthorization(options =>
     //});
 });
 var app = builder.Build();
+
+//add exception handling middleware
+
+app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
