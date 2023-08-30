@@ -17,8 +17,7 @@ namespace Vastra.API.Controllers
         private readonly IVastraRepository _vastraRepository;
         private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(IConfiguration configuration, IVastraRepository vastraRepository, ILogger<AuthenticationController> logger)
-        {
+        public AuthenticationController(IConfiguration configuration, IVastraRepository vastraRepository, ILogger<AuthenticationController> logger){
             _configuration = configuration;
             _vastraRepository = vastraRepository;
             _logger = logger;
@@ -32,7 +31,7 @@ namespace Vastra.API.Controllers
                 Hashing.GetSha256Hash(authenticationRequestBody.Password));
             if (user == null)
             {
-                _logger.LogInformation("User with phoneNumber {0} and password {1} was not found.",
+                _logger.LogDebug("User with phoneNumber {0} and password {1} was not found.",
                     authenticationRequestBody.PhoneNumber, authenticationRequestBody.Password);
                 return Unauthorized();
             }

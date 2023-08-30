@@ -35,7 +35,7 @@ namespace Vastra.API.Controllers
             var (productEntities, paginationMetadata) = await _vastraRepository.GetProductsForCategoryAsync(
                 categoryId, name, searchQuery, pageNumber, pageSize);
 
-            _logger.LogInformation($"Total {productEntities.Count()} fetched in ProductsController.");
+            _logger.LogInformation($"Total {productEntities.Count()} products fetched in ProductsController.");
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(productEntities));

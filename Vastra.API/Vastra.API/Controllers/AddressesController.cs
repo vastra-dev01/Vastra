@@ -34,17 +34,17 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogDebug("Role with role id {0} was not found in AddressesController.", roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation("User claim failed for userId {0} in AddressesController.", userId);
+                _logger.LogDebug("User claim failed for userId {0} in AddressesController.", userId);
                 return Forbid();
             }
             if (pageSize > maxAddressesPageSize)
@@ -69,23 +69,23 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogDebug("Role with role id {0} was not found in AddressesController.", roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation("User claim failed for userId {0} in AddressesController.", userId);
+                _logger.LogDebug("User claim failed for userId {0} in AddressesController.", userId);
                 return Forbid();
             }
             var address = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if (address == null)
             {
-                _logger.LogInformation("Address with addressId {0} and userId {1} was not found in AddressesController", addressId, userId);
+                _logger.LogDebug("Address with addressId {0} and userId {1} was not found in AddressesController", addressId, userId);
                 return NotFound();
             }
             _logger.LogInformation("Address with addressId {0} fetched for userId {1}", addressId, userId);
@@ -100,17 +100,17 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogDebug("Role with role id {0} was not found in AddressesController.", roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation("User claim failed for userId {0} in AddressesController.", userId);
+                _logger.LogDebug("User claim failed for userId {0} in AddressesController.", userId);
                 return Forbid();
             }
             var finaladdress = _mapper.Map<Entities.Address>(address);
@@ -231,29 +231,29 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogDebug("Role with role id {0} was not found in AddressesController.", roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation("User claim failed for userId {0} in AddressesController.", userId);
+                _logger.LogDebug("User claim failed for userId {0} in AddressesController.", userId);
                 return Forbid();
             }
             var addressEntity = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if (addressEntity == null)
             {
-                _logger.LogInformation("Address with addressId {0} was not found in AddressesController", addressId);
+                _logger.LogDebug("Address with addressId {0} was not found in AddressesController", addressId);
                 return NotFound();
             }
             _mapper.Map(address, addressEntity);
             //update Modified Time of product
             addressEntity.DateModified = DateTime.Now;
-            _logger.LogInformation("Date Modified = {DT} set for addressId {1} in AddressesController.",
+            _logger.LogDebug("Date Modified = {DT} set for addressId {1} in AddressesController.",
                 addressEntity.DateModified, addressId);
             //if address set as primary, set other addresses as secondary
             if (addressEntity.Type == (int)AddressType.Primary)
@@ -281,23 +281,23 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogDebug("Role with role id {0} was not found in AddressesController.", roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation("User claim failed for userId {0} in AddressesController.", userId);
+                _logger.LogDebug("User claim failed for userId {0} in AddressesController.", userId);
                 return Forbid();
             }
             var addressToDelete = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if (addressToDelete == null)
             {
-                _logger.LogInformation("Address with addressId {0} was not found in AddressesController", addressId);
+                _logger.LogDebug("Address with addressId {0} was not found in AddressesController", addressId);
                 return NotFound();
             }
             var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);

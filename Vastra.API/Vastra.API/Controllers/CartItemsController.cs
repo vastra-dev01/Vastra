@@ -35,23 +35,23 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside GetCartItems in CartItemsController");
             if(!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if(!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if(!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             if (pageSize > maxCartItemPageSize)
@@ -76,29 +76,29 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside GetCartItem in CartItemsController");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             var cartItem = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId, includeProduct);
             if(cartItem == null)
             {
-                _logger.LogInformation($"CartItem with id {cartItemId} and orderId {orderId} was not found " +
+                _logger.LogDebug($"CartItem with id {cartItemId} and orderId {orderId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
@@ -121,30 +121,30 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside CreateCartItem in CartItemsController");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             //if order has been placed and payment done, cart items can't be added to it
             var order = await _vastraRepository.GetOrderAsync(orderId);
             if (order.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
             {
-                _logger.LogInformation($"CartItem creation failed as payment has already been done " +
+                _logger.LogDebug($"CartItem creation failed as payment has already been done " +
                     $"for orderId {orderId}.");
                 return BadRequest();
             }
@@ -152,7 +152,7 @@ namespace Vastra.API.Controllers
             var product = await _vastraRepository.GetProductAsync(cartItem.ProductId);
             if (product == null)
             {
-                _logger.LogInformation($"Product with productId {cartItem.ProductId} was not found " +
+                _logger.LogDebug($"Product with productId {cartItem.ProductId} was not found " +
                     $"in CartItemsController");
                 return NotFound();
             }
@@ -161,7 +161,7 @@ namespace Vastra.API.Controllers
                 cartItem.ProductId);
             if (existingCartItem != null)
             {
-                _logger.LogInformation($"ProductId {cartItem.ProductId} already exists " +
+                _logger.LogDebug($"ProductId {cartItem.ProductId} already exists " +
                     $"in orderId {order} as a cartItem. " +
                     $"Sending update request.");
                 return await UpdateCartItem(roleId, userId, orderId, existingCartItem.CartItemId,
@@ -174,7 +174,7 @@ namespace Vastra.API.Controllers
             //check if added quantity is available
             if(cartItem.Quantity > product.Quantity)
             {
-                _logger.LogInformation($"Quantity({cartItem.Quantity}) " +
+                _logger.LogDebug($"Quantity({cartItem.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
                 return BadRequest();
             }
@@ -228,37 +228,37 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside UpdateCartItem in CartItemsController");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
             if (order.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
             {
-                _logger.LogInformation($"CartItem updation failed as payment has already been done " +
+                _logger.LogDebug($"CartItem updation failed as payment has already been done " +
                     $"for orderId {orderId}.");
                 return BadRequest();
             }
             var cartItemEntity = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemEntity == null)
             {
-                _logger.LogInformation($"Cart Item with cartItemId {cartItemId} and orderId {orderId}" +
+                _logger.LogDebug($"Cart Item with cartItemId {cartItemId} and orderId {orderId}" +
                     $" was not found in CartItemsController.");
                 return NotFound(cartItemId);
             }
@@ -266,13 +266,13 @@ namespace Vastra.API.Controllers
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
             {
-                _logger.LogInformation($"Product with productId {cartItemEntity.ProductId}" +
+                _logger.LogDebug($"Product with productId {cartItemEntity.ProductId}" +
                     $" was not found in CartItemsController");
                 return NotFound();
             }
             if (cartItem.Quantity > product.Quantity)
             {
-                _logger.LogInformation($"Quantity({cartItem.Quantity}) " +
+                _logger.LogDebug($"Quantity({cartItem.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
                 return BadRequest();
             }
@@ -313,37 +313,37 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside PartiallyUpdateCartItem in CartItemsController");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
             if (order.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
             {
-                _logger.LogInformation($"CartItem updation failed as payment has already been done " +
+                _logger.LogDebug($"CartItem updation failed as payment has already been done " +
                     $"for orderId {orderId}.");
                 return BadRequest();
             }
             var cartItemEntity = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemEntity == null)
             {
-                _logger.LogInformation($"Cart Item with cartItemId {cartItemId} and orderId {orderId}" +
+                _logger.LogDebug($"Cart Item with cartItemId {cartItemId} and orderId {orderId}" +
                     $" was not found in CartItemsController.");
                 return NotFound(cartItemId);
             }
@@ -351,14 +351,14 @@ namespace Vastra.API.Controllers
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
             {
-                _logger.LogInformation($"Product with productId {cartItemEntity.ProductId}" +
+                _logger.LogDebug($"Product with productId {cartItemEntity.ProductId}" +
                     $" was not found in CartItemsController");
                 return NotFound();
             }
             var cartItemToPatch = _mapper.Map<CartItemForUpdateDto>(cartItemEntity);
             if (cartItemToPatch.Quantity > product.Quantity)
             {
-                _logger.LogInformation($"Quantity({cartItemToPatch.Quantity}) " +
+                _logger.LogDebug($"Quantity({cartItemToPatch.Quantity}) " +
                     $"is greater than available quantity({product.Quantity}); ");
                 return BadRequest();
             }
@@ -370,12 +370,12 @@ namespace Vastra.API.Controllers
             patchDocument.ApplyTo(cartItemToPatch, ModelState);
             if (!ModelState.IsValid)
             {
-                _logger.LogInformation($"Validation failed for patchDocument in CartItemsController.");
+                _logger.LogDebug($"Validation failed for patchDocument in CartItemsController.");
                 return BadRequest(ModelState);
             }
             if (!TryValidateModel(cartItemToPatch))
             {
-                _logger.LogInformation($"Validation failed for patchDocument in CartItemsController.");
+                _logger.LogDebug($"Validation failed for patchDocument in CartItemsController.");
                 return BadRequest(ModelState);
             }
             _mapper.Map(cartItemToPatch, cartItemEntity);
@@ -408,37 +408,37 @@ namespace Vastra.API.Controllers
             _logger.LogDebug("Inside DeleteCartItem in CartItemsController");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation($"Role with roleId {roleId} was not found in CartItemsController.");
+                _logger.LogDebug($"Role with roleId {roleId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsAsync(userId))
             {
-                _logger.LogInformation($"User with userId {userId} was not found in CartItemsController.");
+                _logger.LogDebug($"User with userId {userId} was not found in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.OrderExistsForUser(userId, orderId))
             {
-                _logger.LogInformation($"Order with orderId {orderId} and userId {userId} was not found " +
+                _logger.LogDebug($"Order with orderId {orderId} and userId {userId} was not found " +
                     $"in CartItemsController.");
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
             {
-                _logger.LogInformation($"User claim failed for userId {userId} in CartItemsController.");
+                _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
             //if order has been placed and payment done, cart items can't be modified
             var order = await _vastraRepository.GetOrderAsync(orderId);
             if (order.PaymentStatus.Equals(PaymentStatus.Success.ToString()))
             {
-                _logger.LogInformation($"CartItem deletion failed as payment has already been done " +
+                _logger.LogDebug($"CartItem deletion failed as payment has already been done " +
                     $"for orderId {orderId}.");
                 return BadRequest();
             }
             var cartItemToBeDeleted = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId);
             if (cartItemToBeDeleted == null)
             {
-                _logger.LogInformation($"Cart Item with id {cartItemId} was not found in CartItemsController.");
+                _logger.LogDebug($"Cart Item with id {cartItemId} was not found in CartItemsController.");
                 return NotFound(cartItemId);
             }
             _vastraRepository.DeleteCartItem(cartItemToBeDeleted);
