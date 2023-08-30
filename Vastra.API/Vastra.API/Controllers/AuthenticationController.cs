@@ -15,23 +15,29 @@ namespace Vastra.API.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IVastraRepository _vastraRepository;
-        public AuthenticationController(IConfiguration configuration, IVastraRepository vastraRepository)
-        {
+        private readonly ILogger<AuthenticationController> _logger;
+
+        public AuthenticationController(IConfiguration configuration, IVastraRepository vastraRepository, ILogger<AuthenticationController> logger){
             _configuration = configuration;
             _vastraRepository = vastraRepository;
+            _logger = logger;
         }
         [HttpPost("authenticate")]
         public async Task<ActionResult<string>> Authenticate(AuthenticationRequestBody authenticationRequestBody)
         {
+            _logger.LogDebug("Inside Authenticate in AuthenticationController");
             //Step 1: validate username/password
             var user = await _vastraRepository.ValidateUserCredentials(authenticationRequestBody.PhoneNumber,
                 Hashing.GetSha256Hash(authenticationRequestBody.Password));
             if (user == null)
             {
+                _logger.LogDebug("User with phoneNumber {0} and password {1} was not found.",
+                    authenticationRequestBody.PhoneNumber, authenticationRequestBody.Password);
                 return Unauthorized();
             }
             //Step 2: get role for user
             string roleName = (await _vastraRepository.GetRoleAsync(user.RoleId)).RoleName;
+            _logger.LogDebug($"Token generation for role {roleName} in progress");
             //Step 3: create a token
             var securityKey = new SymmetricSecurityKey(
                 Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"]));
@@ -45,6 +51,8 @@ namespace Vastra.API.Controllers
             claimsForToken.Add(new Claim("phone", user.PhoneNumber));
             claimsForToken.Add(new Claim("email", user.EmailId ?? ""));
 
+            _logger.LogDebug($"Claims set for user with phone number {user.PhoneNumber}. Claims : {claimsForToken.ToString()}");
+
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
@@ -54,7 +62,7 @@ namespace Vastra.API.Controllers
                 signingCredentials);
             var tokenToReturn = new JwtSecurityTokenHandler()
                 .WriteToken(jwtSecurityToken);
-
+            _logger.LogDebug($"Successfully returning token : {tokenToReturn}");
             return Ok(tokenToReturn);
         }
     }
