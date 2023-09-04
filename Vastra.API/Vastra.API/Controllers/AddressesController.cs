@@ -53,7 +53,7 @@ namespace Vastra.API.Controllers
             }
             var (addressEntities, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, pageNumber, pageSize);
             
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            //Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
             _logger.LogInformation("Total {0} addresses fetched for  user {1} in AddressesController", addressEntities.Count(), userId);
             
