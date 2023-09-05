@@ -553,6 +553,24 @@ namespace Vastra.API.Services
             return await _context.CartItems.FirstOrDefaultAsync(c => c.OrderId ==  orderId && c.ProductId == productId);
         }
 
-        
+        public async Task<bool> CategoryExistsWithNameAsync(string categoryName)
+        {
+            return await _context.Categories.AnyAsync(c => c.CategoryName.Equals(categoryName));
+        }
+
+        public async Task<bool> ProductWithSKUNumberExistsAsync(string SKUNumber)
+        {
+            return await _context.Products.AnyAsync(p => p.SKU.Equals(SKUNumber));
+        }
+
+        public async Task<Product?> GetProductBySKUNumberAsync(string SKUNumber)
+        {
+            return await _context.Products.FirstOrDefaultAsync(p => p.SKU.Equals(SKUNumber));
+        }
+
+        public async Task<bool> UserWithPhoneExistsAsync(string phoneNumber)
+        {
+            return await _context.Users.AnyAsync(u => u.PhoneNumber.Equals(phoneNumber));
+        }
     }
 }

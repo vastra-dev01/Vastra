@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vastra.API.Models;
+using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
 using Vastra.API.Services;
 
@@ -80,6 +81,12 @@ namespace Vastra.API.Controllers
                    $"in CreateProduct() " +
                    $"in ProductsController.");
                 return NotFound();
+            }
+            //check SKU number
+            if(await _vastraRepository.ProductWithSKUNumberExistsAsync(product.SKU))
+            {
+                throw new ProductWithSKUNumberAlreadyExistsException($"Product with SKU " +
+                    $"{product.SKU} already exists.");
             }
             var finalProduct = _mapper.Map<Entities.Product>(product);
 
