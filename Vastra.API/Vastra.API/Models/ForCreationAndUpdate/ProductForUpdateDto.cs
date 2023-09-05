@@ -27,9 +27,9 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         public string Colour { get; set; }
 
 
-        [Required(ErrorMessage = "Pleae provide SKU")]
-        [RegularExpression(@"^[A-Z]{4}[0-9]{4}$", ErrorMessage = "SKU invalid")]
-        public string SKU { get; set; }
+        //[Required(ErrorMessage = "Pleae provide SKU")]
+        //[RegularExpression(@"^[A-Z]{4}[0-9]{4}$", ErrorMessage = "SKU invalid")]
+        //public string SKU { get; set; }
 
 
         [Required(ErrorMessage = "Please provide Price")]

@@ -22,6 +22,7 @@ namespace Vastra.API.Services
         void DeleteUser(User user);
         Task<bool> UserExistsAsync(int userId);
         Task<bool> UserExistsWithRoleAsync(int roleId, int userId);
+        Task<bool> UserWithPhoneExistsAsync(string phoneNumber);
         #endregion User
 
         #region Role
@@ -30,6 +31,7 @@ namespace Vastra.API.Services
         Task AddRoleAsync(Role role);
         void DeleteRole(Role role);
         Task<bool> RoleExistsAsync(int roleId);
+        
 
         #endregion Role
 
@@ -42,6 +44,8 @@ namespace Vastra.API.Services
         void DeleteProduct(Product product);
         Task<bool> ProductExistsAsync(int productId);
         Task<CartItem?> ProductExistsAsACartItemForOrder(int orderId, int productId);
+        Task<bool> ProductWithSKUNumberExistsAsync(string SKUNumber);
+        Task<Product?> GetProductBySKUNumberAsync(string SKUNumber);
 
 
         #endregion Product
@@ -74,6 +78,7 @@ namespace Vastra.API.Services
         Task UpdateCategoryAsync(Category category);
         void DeleteCategory(Category category);
         Task<bool> CategoryExistsAsync(int categoryId);
+        Task<bool> CategoryExistsWithNameAsync(string categoryName);
 
         #endregion Category
 
