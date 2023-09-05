@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vastra.API.Models;
+using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
 using Vastra.API.Services;
 
@@ -109,6 +110,12 @@ namespace Vastra.API.Controllers
                         $"by a user with role as 'User'.");
                     return Forbid();
                 }
+            }
+            //check user with phone already exists
+            if(await _vastraRepository.UserWithPhoneExistsAsync(user.PhoneNumber.Trim()))
+            {
+                throw new UserWithPhoneAlreadyExistsException($"User with phone " +
+                    $"{user.PhoneNumber} already exists.");
             }
             var finalUser = _mapper.Map<Entities.User>(user);
 

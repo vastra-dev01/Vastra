@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vastra.API.Entities;
 using Vastra.API.Models;
+using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
 using Vastra.API.Services;
 
@@ -81,7 +82,13 @@ namespace Vastra.API.Controllers
             _logger.LogDebug($"Inside CreateCategory in CategoriesController.");
 
             var finalCategory = _mapper.Map<Entities.Category>(category);
-
+            //check if given category name already exists
+            if(await _vastraRepository
+                .CategoryExistsWithNameAsync(finalCategory.CategoryName.Trim()))
+            {
+                throw new ItemWithNameAlreadyExistsException($"Category with name " +
+                    $"{finalCategory.CategoryName} already exists.");
+            }
             //add date added and date modified for new category
             finalCategory.DateAdded = DateTime.Now;
             finalCategory.DateModified = DateTime.Now;
@@ -126,7 +133,19 @@ namespace Vastra.API.Controllers
                     $"in CategoriesController.");
                 return NotFound();
             }
+            //if name is changed, check if category with changed name already exists
+            if (!categoryEntity.CategoryName
+                .Equals(category.CategoryName, StringComparison.OrdinalIgnoreCase))
+            {
+                if(await _vastraRepository
+                    .CategoryExistsWithNameAsync(category.CategoryName.Trim()))
+                {
+                    throw new ItemWithNameAlreadyExistsException($"Category with name " +
+                        $"{category.CategoryName} already exists.");
+                }
+            }
             _mapper.Map(category, categoryEntity);
+            
             //update Modified Time of product
             categoryEntity.DateModified = DateTime.Now;
 
@@ -175,6 +194,18 @@ namespace Vastra.API.Controllers
                     $"in CategoriesController.");
                 return BadRequest(ModelState);
             }
+            //if name is changed, check if category with changed name already exists
+            if (!categoryEntity.CategoryName
+                .Equals(categoryToPatch.CategoryName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (await _vastraRepository
+                    .CategoryExistsWithNameAsync(categoryToPatch.CategoryName.Trim()))
+                {
+                    throw new ItemWithNameAlreadyExistsException($"Category with name " +
+                        $"{categoryToPatch.CategoryName} already exists.");
+                }
+            }
+
             _mapper.Map(categoryToPatch, categoryEntity);
             //update Modified Time of category
             categoryEntity.DateModified = DateTime.Now;

@@ -43,6 +43,9 @@ namespace Vastra.API.Middleware
                 case UpdatePaidOrderException:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     break;
+                case ItemAlreadyExistsException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
             }
             var errorMessage = JsonConvert.SerializeObject(errorMessageObject);
             context.Response.ContentType = "application/json";
