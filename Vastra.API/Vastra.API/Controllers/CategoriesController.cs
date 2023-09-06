@@ -269,7 +269,15 @@ namespace Vastra.API.Controllers
                     $"in CategoriesController.");
                 return NotFound();
             }
+            
             var finalSubcategory = _mapper.Map<Entities.Category>(subCategory);
+            //check if given category name already exists
+            if (await _vastraRepository
+                .CategoryExistsWithNameAsync(finalSubcategory.CategoryName.Trim()))
+            {
+                throw new ItemWithNameAlreadyExistsException($"Category with name " +
+                    $"{finalSubcategory.CategoryName} already exists.");
+            }
             //set date added  & date modified for new sub category
             finalSubcategory.DateAdded = DateTime.Now;
             finalSubcategory.DateModified = DateTime.Now;
