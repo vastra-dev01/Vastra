@@ -6,7 +6,7 @@ namespace Vastra.API.Entities
     {
         [Key]
         public int RoleId { get; set; }
-
+        [MaxLength(50)]
         public string RoleName { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }

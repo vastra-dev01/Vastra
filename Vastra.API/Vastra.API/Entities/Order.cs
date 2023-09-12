@@ -9,7 +9,7 @@ namespace Vastra.API.Entities
         public int OrderId { get; set; }
 
         public float Value { get; set; }
-
+        [MaxLength(50)]
         public String PaymentStatus { get; set; } 
 
         public int UserId { get; set; }

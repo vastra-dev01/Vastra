@@ -8,7 +8,8 @@ namespace Vastra.API.Test.Fixtures
 {
     [CollectionDefinition("VastraServicesCollection")]
     public class VastraServicesCollectionFixture 
-        : ICollectionFixture<VastraServicesClassFixture> 
+        : ICollectionFixture<VastraServicesClassFixture>
+        //,ICollectionFixture<VastraTestDBClassFixture>
     {
     }
 }

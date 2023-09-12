@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vastra.API.Migrations
 {
-    public partial class fresh_18_08_2023 : Migration
+    public partial class fresh_12_09_2023 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,7 +36,7 @@ namespace Vastra.API.Migrations
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -51,13 +51,13 @@ namespace Vastra.API.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Size = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Colour = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Size = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Colour = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SKU = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Price = table.Column<float>(type: "real", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -80,11 +80,11 @@ namespace Vastra.API.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    EmailId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -106,13 +106,13 @@ namespace Vastra.API.Migrations
                 {
                     AddressId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PinCode = table.Column<int>(type: "int", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tag = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Type = table.Column<int>(type: "int", nullable: true),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -135,7 +135,7 @@ namespace Vastra.API.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<float>(type: "real", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaymentStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -186,9 +186,9 @@ namespace Vastra.API.Migrations
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
                 values: new object[,]
                 {
-                    { 1, "Men", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5404), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5424), null },
-                    { 2, "Women", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5427), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5428), null },
-                    { 3, "Kids", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5431), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5432), null }
+                    { 1, "Men", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(901), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(912), null },
+                    { 2, "Women", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(913), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(914), null },
+                    { 3, "Kids", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(915), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(916), null }
                 });
 
             migrationBuilder.InsertData(
@@ -196,8 +196,8 @@ namespace Vastra.API.Migrations
                 columns: new[] { "RoleId", "DateAdded", "DateModified", "RoleName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5791), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5793), "Admin" },
-                    { 2, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5796), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5798), "User" }
+                    { 1, new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1036), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1036), "Admin" },
+                    { 2, new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1038), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1038), "User" }
                 });
 
             migrationBuilder.InsertData(
@@ -205,8 +205,8 @@ namespace Vastra.API.Migrations
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
                 values: new object[,]
                 {
-                    { 4, "T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5434), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5435), 1 },
-                    { 6, "Tops", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5441), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5442), 2 }
+                    { 4, "T Shirts", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(917), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(917), 1 },
+                    { 6, "Tops", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(921), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(921), 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -214,24 +214,24 @@ namespace Vastra.API.Migrations
                 columns: new[] { "UserId", "DateAdded", "DateModified", "EmailId", "FirstName", "LastName", "Password", "PhoneNumber", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6245), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6248), "admin@vastra.com", "admin", "admin", "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=", "9661734253", 1 },
-                    { 2, new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6354), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6356), "User1@vastra.com", "Sumit", "Ranjan", "sMkwGjEJzLviG2lXyrFPM2pISrmuqnel/t9MV2Itvs0=", "8804225153", 2 }
+                    { 1, new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1246), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1246), "vastra.admin@vastra.com", "VastraAdmin", "1", "yYKZCKGMWsJBO9aszZ9p4A01jOTa2gOY8rsELTPmOiw=", "9999999999", 1 },
+                    { 2, new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1267), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1268), "vastra.user@vastra.com", "VastraUser", "1", "BcUI2OvSP7itB9HGiRw98Hk4/zECHQvkNjEaGP/PcN8=", "8888888888", 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 5, "Full Sleeve T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5438), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5439), 4 });
+                values: new object[] { 5, "Full Sleeve T Shirts", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(918), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(919), 4 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 7, "French Tops", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5445), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5446), 6 });
+                values: new object[] { 7, "French Tops", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(922), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(923), 6 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "DateAdded", "DateModified", "ParentCategoryId" },
-                values: new object[] { 8, "Half Sleeve T Shirts", new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5448), new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5449), 4 });
+                values: new object[] { 8, "Half Sleeve T Shirts", new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(924), new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(924), 4 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",

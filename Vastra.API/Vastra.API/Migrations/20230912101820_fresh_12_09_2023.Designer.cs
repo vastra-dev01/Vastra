@@ -12,8 +12,8 @@ using Vastra.API.DBContexts;
 namespace Vastra.API.Migrations
 {
     [DbContext(typeof(VastraContext))]
-    [Migration("20230817184219_fresh_18_08_2023")]
-    partial class fresh_18_08_2023
+    [Migration("20230912101820_fresh_12_09_2023")]
+    partial class fresh_12_09_2023
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,11 +34,13 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
@@ -48,17 +50,20 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("PinCode")
                         .HasColumnType("int");
 
                     b.Property<string>("State")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Tag")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("Type")
                         .HasColumnType("int");
@@ -141,61 +146,61 @@ namespace Vastra.API.Migrations
                         {
                             CategoryId = 1,
                             CategoryName = "Men",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5404),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5424)
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(901),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(912)
                         },
                         new
                         {
                             CategoryId = 2,
                             CategoryName = "Women",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5427),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5428)
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(913),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(914)
                         },
                         new
                         {
                             CategoryId = 3,
                             CategoryName = "Kids",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5431),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5432)
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(915),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(916)
                         },
                         new
                         {
                             CategoryId = 4,
                             CategoryName = "T Shirts",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5434),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5435),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(917),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(917),
                             ParentCategoryId = 1
                         },
                         new
                         {
                             CategoryId = 5,
                             CategoryName = "Full Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5438),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5439),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(918),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(919),
                             ParentCategoryId = 4
                         },
                         new
                         {
                             CategoryId = 6,
                             CategoryName = "Tops",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5441),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5442),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(921),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(921),
                             ParentCategoryId = 2
                         },
                         new
                         {
                             CategoryId = 7,
                             CategoryName = "French Tops",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5445),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5446),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(922),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(923),
                             ParentCategoryId = 6
                         },
                         new
                         {
                             CategoryId = 8,
                             CategoryName = "Half Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5448),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5449),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(924),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(924),
                             ParentCategoryId = 4
                         });
                 });
@@ -216,7 +221,8 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -244,7 +250,8 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("Colour")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
@@ -253,15 +260,18 @@ namespace Vastra.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
@@ -271,11 +281,13 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("SKU")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Size")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ProductId");
 
@@ -300,7 +312,8 @@ namespace Vastra.API.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("RoleId");
 
@@ -310,15 +323,15 @@ namespace Vastra.API.Migrations
                         new
                         {
                             RoleId = 1,
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5791),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5793),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1036),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1036),
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5796),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(5798),
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1038),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1038),
                             RoleName = "User"
                         });
                 });
@@ -338,22 +351,27 @@ namespace Vastra.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -368,25 +386,25 @@ namespace Vastra.API.Migrations
                         new
                         {
                             UserId = 1,
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6245),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6248),
-                            EmailId = "admin@vastra.com",
-                            FirstName = "admin",
-                            LastName = "admin",
-                            Password = "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=",
-                            PhoneNumber = "9661734253",
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1246),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1246),
+                            EmailId = "vastra.admin@vastra.com",
+                            FirstName = "VastraAdmin",
+                            LastName = "1",
+                            Password = "yYKZCKGMWsJBO9aszZ9p4A01jOTa2gOY8rsELTPmOiw=",
+                            PhoneNumber = "9999999999",
                             RoleId = 1
                         },
                         new
                         {
                             UserId = 2,
-                            DateAdded = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6354),
-                            DateModified = new DateTime(2023, 8, 18, 0, 12, 18, 760, DateTimeKind.Local).AddTicks(6356),
-                            EmailId = "User1@vastra.com",
-                            FirstName = "Sumit",
-                            LastName = "Ranjan",
-                            Password = "sMkwGjEJzLviG2lXyrFPM2pISrmuqnel/t9MV2Itvs0=",
-                            PhoneNumber = "8804225153",
+                            DateAdded = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1267),
+                            DateModified = new DateTime(2023, 9, 12, 15, 48, 20, 646, DateTimeKind.Local).AddTicks(1268),
+                            EmailId = "vastra.user@vastra.com",
+                            FirstName = "VastraUser",
+                            LastName = "1",
+                            Password = "BcUI2OvSP7itB9HGiRw98Hk4/zECHQvkNjEaGP/PcN8=",
+                            PhoneNumber = "8888888888",
                             RoleId = 2
                         });
                 });

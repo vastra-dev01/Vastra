@@ -8,19 +8,19 @@ namespace Vastra.API.Entities
     {
         [Key]
         public int ProductId { get; set; }
-
+        [MaxLength(50)]
         public string Name { get; set; }
-
+        [MaxLength(500)]
         public string? Description { get; set; }
-
+        [MaxLength(50)]
         public string Size { get; set; }
-
+        [MaxLength(50)]
         public string Colour { get; set; }
-
+        [MaxLength(50)]
         public string SKU { get; set; }
 
         public float Price { get; set; }
-
+        [MaxLength(200)]
         public string Image { get; set; }
 
         public int Quantity { get; set; }

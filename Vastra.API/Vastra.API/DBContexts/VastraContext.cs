@@ -7,17 +7,17 @@ namespace Vastra.API.DBContexts
 {
     public class VastraContext : DbContext
     {
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
 
-        public VastraContext(IConfiguration configuration)
+        public VastraContext(DbContextOptions options) : base(options) 
         {
-            _configuration = configuration;   
+            //_configuration = configuration;   
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            options.UseSqlServer(_configuration.GetConnectionString("VastraTestConnection"));
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //{
+        //    options.UseSqlServer(_configuration.GetConnectionString("VastraTestConnection"));
+        //}
 
         public DbSet<Address> Addresses { get; set; } = null!;
         public DbSet<CartItem> CartItems { get; set; } = null!;
@@ -112,27 +112,27 @@ namespace Vastra.API.DBContexts
 
             //pre-defined users
             modelBuilder.Entity<User>().HasData(
-            new User(_configuration["SampleUsers:AdminFirstName"], 
-            _configuration["SampleUsers:AdminLastName"], 
-            _configuration["SampleUsers:AdminPhone"], 
-            Hashing.GetSha256Hash(_configuration["SampleUsers:AdminPassword"]))
+            new User("VastraAdmin", 
+            "1", 
+            "9999999999", 
+            Hashing.GetSha256Hash("Vastra@2024"))
             {
                 UserId = 1,
                 DateAdded = DateTime.Now,
                 DateModified = DateTime.Now,
                 RoleId = 1,
-                EmailId = _configuration["SampleUsers:AdminEmail"]
+                EmailId = "vastra.admin@vastra.com"
             },
-            new User(_configuration["SampleUsers:User1FirstName"],
-            _configuration["SampleUsers:User1LastName"],
-            _configuration["SampleUsers:User1Phone"],
-            Hashing.GetSha256Hash(_configuration["SampleUsers:User1Password"]))
+            new User("VastraUser",
+            "1",
+            "8888888888",
+            Hashing.GetSha256Hash("VastraUser@2024"))
             {
                 UserId = 2,
                 DateAdded = DateTime.Now,
                 DateModified = DateTime.Now,
                 RoleId = 2,
-                EmailId = _configuration["SampleUsers:User1Email"]
+                EmailId = "vastra.user@vastra.com"
             }
                 );
             base.OnModelCreating(modelBuilder);

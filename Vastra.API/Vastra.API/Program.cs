@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Security.Claims;
@@ -27,7 +28,10 @@ builder.Services.AddControllers(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<VastraContext>();
+builder.Services.AddDbContext<VastraContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:VastraTestConnection"]);
+});
 builder.Services.AddScoped<IVastraRepository, VastraRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication("Bearer")
