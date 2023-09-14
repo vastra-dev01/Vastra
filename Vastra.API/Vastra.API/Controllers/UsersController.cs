@@ -68,7 +68,8 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            var userEntity = await _vastraRepository.GetUserByRoleAsync(roleId, userId, includeAddresses, includeOrders);
+            var userEntity = await _vastraRepository
+                .GetUserByRoleAsync(roleId, userId, includeAddresses, includeOrders);
             if(userEntity == null)
             {
                 _logger.LogDebug($"User with id {userId} was not found " +
@@ -76,7 +77,7 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            if(!await _vastraRepository.ValidateUserClaim(User, userId))
+            if(!await _vastraRepository.ValidateUserClaim(User, userId) && !User.IsInRole("Admin"))
             {
                 _logger.LogDebug($"User claim failed for userId {userId} " +
                    $"in GetUser() " +

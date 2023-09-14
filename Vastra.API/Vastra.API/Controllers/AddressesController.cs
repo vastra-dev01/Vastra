@@ -20,7 +20,8 @@ namespace Vastra.API.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<AddressesController> _logger;
         const int maxAddressesPageSize = 10;
-        public AddressesController(IVastraRepository vastraRepository, IMapper mapper, ILogger<AddressesController> logger)
+        public AddressesController(IVastraRepository vastraRepository, IMapper mapper,
+            ILogger<AddressesController> logger)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
