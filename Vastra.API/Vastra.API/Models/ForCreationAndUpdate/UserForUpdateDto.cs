@@ -8,13 +8,15 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         [Required(ErrorMessage = "Please provide a First Name")]
         [MaxLength(50, ErrorMessage = "First name too large")]
         [MinLength(3, ErrorMessage = "First Name too small")]
-        [RegularExpression(@"^[a-zA-z]+$", ErrorMessage = "First Name should be a single word")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First Name should be a single word. Numbers" +
+            " or special characters are not allowed. Use '_' to add multi-word name ex: 'tom_cruise'.")]
         public string FirstName { get; set; }
 
 
         [MaxLength(50, ErrorMessage = "Last name too large")]
         [MinLength(3, ErrorMessage = "Last Name too small")]
-        [RegularExpression(@"^[a-zA-z]+$", ErrorMessage = "Last Name should be a single word")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name should be a single word. Numbers" +
+            " or special characters are not allowed. Use '_' to add multi-word name ex: 'tom_cruise'.")]
         public string? LastName { get; set; }
 
 

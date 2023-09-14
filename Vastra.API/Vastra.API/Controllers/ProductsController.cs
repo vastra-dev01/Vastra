@@ -18,7 +18,8 @@ namespace Vastra.API.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<ProductsController> _logger;
         const int maxProductsPageSize = 20;
-        public ProductsController(IVastraRepository vastraRepository, IMapper mapper, ILogger<ProductsController> logger)
+        public ProductsController(IVastraRepository vastraRepository, IMapper mapper,
+            ILogger<ProductsController> logger)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
@@ -29,11 +30,19 @@ namespace Vastra.API.Controllers
             string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug($"Inside GetProducts in ProductsController.");
+            if (!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                _logger.LogDebug($"Category with id {categoryId} was not found " +
+                    $"in GetProducts() " +
+                    $"in ProductsController.");
+                return NotFound();
+            }
             if (pageSize > maxProductsPageSize)
             {
                 pageSize = maxProductsPageSize;
             }
-            var (productEntities, paginationMetadata) = await _vastraRepository.GetProductsForCategoryAsync(
+            var (productEntities, paginationMetadata) = await _vastraRepository
+                .GetProductsForCategoryAsync(
                 categoryId, name, searchQuery, pageNumber, pageSize);
 
             _logger.LogInformation($"Total {productEntities.Count()} products fetched in ProductsController.");

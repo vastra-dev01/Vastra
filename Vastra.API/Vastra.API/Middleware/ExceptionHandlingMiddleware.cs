@@ -46,6 +46,18 @@ namespace Vastra.API.Middleware
                 case ItemAlreadyExistsException:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     break;
+                case CantDeleteFirstAdminException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                case CantDeleteResourceContainingChildResourcesException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                case ProductWithProductIdInCartItemNotFoundException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                default:
+                    errorMessageObject.Message = "Oops! Some Error Occured.";
+                    break;
             }
             var errorMessage = JsonConvert.SerializeObject(errorMessageObject);
             context.Response.ContentType = "application/json";

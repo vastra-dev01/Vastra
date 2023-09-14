@@ -23,7 +23,8 @@ namespace Vastra.API.Controllers
         private const int maxCartItemPageSize = 10;
         private readonly ILogger<CartItemsController> _logger;
 
-        public CartItemsController(IVastraRepository vastraRepository, IMapper mapper, ILogger<CartItemsController> logger)
+        public CartItemsController(IVastraRepository vastraRepository, IMapper mapper,
+            ILogger<CartItemsController> logger)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
@@ -59,7 +60,8 @@ namespace Vastra.API.Controllers
             {
                 pageSize = maxCartItemPageSize;
             }
-            var (cartItemEntities, paginationMetadata) = await _vastraRepository.GetCartItemsForOrderAsync(orderId,
+            var (cartItemEntities, paginationMetadata) = await _vastraRepository
+                .GetCartItemsForOrderAsync(orderId,
                 pageNumber, pageSize);
             
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -96,7 +98,8 @@ namespace Vastra.API.Controllers
                 _logger.LogDebug($"User claim failed for userId {userId} in CartItemsController.");
                 return Forbid();
             }
-            var cartItem = await _vastraRepository.GetCartItemForOrderAsync(orderId, cartItemId, includeProduct);
+            var cartItem = await _vastraRepository
+                .GetCartItemForOrderAsync(orderId, cartItemId, includeProduct);
             if(cartItem == null)
             {
                 _logger.LogDebug($"CartItem with id {cartItemId} and orderId {orderId} was not found " +
@@ -153,9 +156,9 @@ namespace Vastra.API.Controllers
             var product = await _vastraRepository.GetProductAsync(cartItem.ProductId);
             if (product == null)
             {
-                _logger.LogDebug($"Product with productId {cartItem.ProductId} was not found " +
-                    $"in CartItemsController");
-                return NotFound();
+                throw new ProductWithProductIdInCartItemNotFoundException(
+                    $"Product with productId {cartItem.ProductId} was not found.");
+                
             }
             //check if product already exists as a cart item
             var existingCartItem = await _vastraRepository.ProductExistsAsACartItemForOrder(orderId,
@@ -277,7 +280,7 @@ namespace Vastra.API.Controllers
                     $"is greater than available quantity({product.Quantity}); ");
                 throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
             }
-            
+
             float oldCartItemValue = cartItemEntity.Value;
 
             _logger.LogDebug($"oldCartItemvalue = {oldCartItemValue} " +
@@ -348,7 +351,7 @@ namespace Vastra.API.Controllers
                     $" was not found in CartItemsController.");
                 return NotFound(cartItemId);
             }
-            //check if modified quantity is available
+            //fetch related product
             var product = await _vastraRepository.GetProductAsync(cartItemEntity.ProductId);
             if (product == null)
             {
@@ -357,18 +360,14 @@ namespace Vastra.API.Controllers
                 return NotFound();
             }
             var cartItemToPatch = _mapper.Map<CartItemForUpdateDto>(cartItemEntity);
-            if (cartItemToPatch.Quantity > product.Quantity)
-            {
-                _logger.LogDebug($"Quantity({cartItemToPatch.Quantity}) " +
-                    $"is greater than available quantity({product.Quantity}); ");
-                throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
-            }
+            
 
             float oldCartItemValue = cartItemEntity.Value;
             _logger.LogDebug($"oldCartItemvalue = {oldCartItemValue} " +
                 $"in PartiallyUpdateCartItem() " +
                 $"in CartItemsController");
             patchDocument.ApplyTo(cartItemToPatch, ModelState);
+            
             if (!ModelState.IsValid)
             {
                 _logger.LogDebug($"Validation failed for patchDocument in CartItemsController.");
@@ -378,6 +377,13 @@ namespace Vastra.API.Controllers
             {
                 _logger.LogDebug($"Validation failed for patchDocument in CartItemsController.");
                 return BadRequest(ModelState);
+            }
+            //check if modified quantity is available
+            if (cartItemToPatch.Quantity > product.Quantity)
+            {
+                _logger.LogDebug($"Quantity({cartItemToPatch.Quantity}) " +
+                    $"is greater than available quantity({product.Quantity}); ");
+                throw new QuantityOutOfLimitException("Quantity is more than available quantity.");
             }
             _mapper.Map(cartItemToPatch, cartItemEntity);
 

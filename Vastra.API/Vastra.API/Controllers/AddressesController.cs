@@ -28,7 +28,8 @@ namespace Vastra.API.Controllers
         }
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<AddressDto>>> GetAddresses(int roleId, int userId, int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<AddressDto>>> GetAddresses(int roleId, 
+            int userId, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug("Inside GetAddresses in AddressesController.");
 
@@ -39,7 +40,8 @@ namespace Vastra.API.Controllers
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", 
+                    userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
@@ -51,11 +53,13 @@ namespace Vastra.API.Controllers
             {
                 pageSize = maxAddressesPageSize;
             }
-            var (addressEntities, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, pageNumber, pageSize);
+            var (addressEntities, paginationMetadata) = await _vastraRepository
+                .GetAddressesForUserAsync(userId, pageNumber, pageSize);
             
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
-            _logger.LogInformation("Total {0} addresses fetched for  user {1} in AddressesController", addressEntities.Count(), userId);
+            _logger.LogInformation("Total {0} addresses fetched for  user {1} in AddressesController",
+                addressEntities.Count(), userId);
             
             return Ok(_mapper.Map<IEnumerable<AddressDto>>(addressEntities));
 
@@ -94,7 +98,8 @@ namespace Vastra.API.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<AddressDto>> CreateAddress(int roleId, int userId, AddressForCreationDto address)
+        public async Task<ActionResult<AddressDto>> CreateAddress(int roleId, int userId,
+            AddressForCreationDto address)
         {
             _logger.LogDebug("Inside CreateAddress in AddressesController.");
 
@@ -105,7 +110,8 @@ namespace Vastra.API.Controllers
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.",
+                    userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
@@ -118,11 +124,13 @@ namespace Vastra.API.Controllers
             finaladdress.DateAdded = DateTime.Now;
             finaladdress.DateModified = DateTime.Now;
 
-            _logger.LogDebug("Date Added = {DT} and Date Modified = {DT} set for newly created address in AddressesController.",
+            _logger.LogDebug("Date Added = {DT} and Date Modified = {DT}" +
+                " set for newly created address in AddressesController.",
                 finaladdress.DateAdded, finaladdress.DateModified);
 
 
-            var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);
+            var (addresses, paginationMetadata) = await _vastraRepository
+                .GetAddressesForUserAsync(userId, 1, 100);
             if (addresses.Count() == 0)
             {
                 _logger.LogDebug("addresses.Count() = 0 in CreateAddress() in AddressesController");
@@ -133,7 +141,8 @@ namespace Vastra.API.Controllers
             //if address set as primary, set other addresses as secondary
             if (finaladdress.Type == (int)AddressType.Primary && addresses.Count() > 0)
             {
-                _logger.LogDebug("Found {0} addresses for user {1} to be set as secondary in AddressesController.", addresses.Count(), userId);
+                _logger.LogDebug("Found {0} addresses for user {1} to be set as secondary in " +
+                    "AddressesController.", addresses.Count(), userId);
                 foreach (var addressMember in addresses)
                 {
                     addressMember.Type = (int)AddressType.Secondary;
@@ -143,7 +152,8 @@ namespace Vastra.API.Controllers
 
             var createdAddressToReturn = _mapper.Map<AddressDto>(finaladdress);
 
-            _logger.LogInformation("Created new address : {0}", JsonSerializer.Serialize(createdAddressToReturn));
+            _logger.LogInformation("Created new address : {0}", JsonSerializer
+                .Serialize(createdAddressToReturn));
             return CreatedAtRoute("GetAddress",
                 new
                 {
@@ -164,12 +174,14 @@ namespace Vastra.API.Controllers
 
             if (!await _vastraRepository.RoleExistsAsync(roleId))
             {
-                _logger.LogInformation("Role with role id {0} was not found in AddressesController.", roleId);
+                _logger.LogInformation("Role with role id {0} was not found in AddressesController.",
+                    roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogInformation("UserId {0} with role id {1} was not found in AddressesController.",
+                    userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
@@ -180,7 +192,8 @@ namespace Vastra.API.Controllers
             var addressEntity = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if(addressEntity == null)
             {
-                _logger.LogInformation("Address with addressId {0} for userId {1} was not found in AddressesController", 
+                _logger.LogInformation("Address with addressId {0} for userId {1} was not found in" +
+                    " AddressesController", 
                     addressId, userId);
                 return NotFound();
             }
@@ -206,8 +219,10 @@ namespace Vastra.API.Controllers
             //if address set as primary, set other addresses as secondary
             if (addressEntity.Type == (int)AddressType.Primary)
             {
-                var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId,1,100);
-                _logger.LogDebug("Found {0} addresses for userId {1} in PartiallyUpdateAddress in AddressesController"
+                var (addresses, paginationMetadata) = await _vastraRepository
+                    .GetAddressesForUserAsync(userId,1,100);
+                _logger.LogDebug("Found {0} addresses for userId {1} in PartiallyUpdateAddress" +
+                    " in AddressesController"
                     , addresses.Count(), userId);
                 foreach (var address in addresses)
                 {
@@ -225,7 +240,8 @@ namespace Vastra.API.Controllers
         }
         [Authorize]
         [HttpPut("{addressId}")]
-        public async Task<ActionResult> UpdateAddress(int roleId, int userId, int addressId, AddressForUpdateDto address)
+        public async Task<ActionResult> UpdateAddress(int roleId, int userId, int addressId,
+            AddressForUpdateDto address)
         {
             _logger.LogDebug("Inside UpdateAddress in AddressesController.");
 
@@ -236,7 +252,8 @@ namespace Vastra.API.Controllers
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.",
+                    userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
@@ -247,7 +264,8 @@ namespace Vastra.API.Controllers
             var addressEntity = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if (addressEntity == null)
             {
-                _logger.LogDebug("Address with addressId {0} was not found in AddressesController", addressId);
+                _logger.LogDebug("Address with addressId {0} was not found in AddressesController"
+                    , addressId);
                 return NotFound();
             }
             _mapper.Map(address, addressEntity);
@@ -258,7 +276,8 @@ namespace Vastra.API.Controllers
             //if address set as primary, set other addresses as secondary
             if (addressEntity.Type == (int)AddressType.Primary)
             {
-                var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);
+                var (addresses, paginationMetadata) = await _vastraRepository
+                    .GetAddressesForUserAsync(userId, 1, 100);
                 _logger.LogDebug("Found {0} addresses for userId {1} in UpdateAddress in AddressesController"
                      , addresses.Count(), userId);
                 foreach (var addressMember in addresses)
@@ -286,7 +305,8 @@ namespace Vastra.API.Controllers
             }
             if (!await _vastraRepository.UserExistsWithRoleAsync(roleId, userId))
             {
-                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.", userId, roleId);
+                _logger.LogDebug("UserId {0} with role id {1} was not found in AddressesController.",
+                    userId, roleId);
                 return NotFound();
             }
             if (!await _vastraRepository.ValidateUserClaim(User, userId))
@@ -297,10 +317,12 @@ namespace Vastra.API.Controllers
             var addressToDelete = await _vastraRepository.GetAddressForUserAsync(userId, addressId);
             if (addressToDelete == null)
             {
-                _logger.LogDebug("Address with addressId {0} was not found in AddressesController", addressId);
+                _logger.LogDebug("Address with addressId {0} was not found in AddressesController",
+                    addressId);
                 return NotFound();
             }
-            var (addresses, paginationMetadata) = await _vastraRepository.GetAddressesForUserAsync(userId, 1, 100);
+            var (addresses, paginationMetadata) = await _vastraRepository
+                .GetAddressesForUserAsync(userId, 1, 100);
             _logger.LogDebug("Found {0} addresses for userId {1} in DeleteAddress in AddressesController"
                 , addresses.Count(), userId);
 
@@ -319,7 +341,8 @@ namespace Vastra.API.Controllers
             }
             if(addressToBeSet != null)
             {
-                _logger.LogDebug("Setting address with addressId {0} as Primary in DeleteAddress in AddressesController"
+                _logger.LogDebug("Setting address with addressId {0} as Primary in DeleteAddress in " +
+                    "AddressesController"
                     , addressToBeSet.AddressId);
                 addressToBeSet.Type = (int)AddressType.Primary;
             }

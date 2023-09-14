@@ -2,6 +2,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Security.Claims;
 using System.Text;
+using Vastra.API.Business;
 using Vastra.API.DBContexts;
 using Vastra.API.Middleware;
 using Vastra.API.Services;
@@ -29,6 +30,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<VastraContext>();
 builder.Services.AddScoped<IVastraRepository, VastraRepository>();
+builder.Services.AddScoped<IVastraBusinessUtils, VastraBusinessUtils>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>

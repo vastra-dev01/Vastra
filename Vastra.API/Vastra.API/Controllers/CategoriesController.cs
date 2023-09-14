@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Vastra.API.Business;
 using Vastra.API.Entities;
 using Vastra.API.Models;
 using Vastra.API.Models.CustomException;
@@ -18,28 +19,36 @@ namespace Vastra.API.Controllers
         private readonly IVastraRepository _vastraRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<CategoriesController> _logger;
+        private readonly IVastraBusinessUtils _vastraBusinessUtils;
         const int maxCategoriesPageSize = 10;
 
-        public CategoriesController(IVastraRepository vastraRepository, IMapper mapper, ILogger<CategoriesController> logger)
+        public CategoriesController(IVastraRepository vastraRepository,
+            IMapper mapper,
+            ILogger<CategoriesController> logger,
+            IVastraBusinessUtils vastraBusinessUtils)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
             _logger = logger;
+            _vastraBusinessUtils = vastraBusinessUtils;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories(
+            int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug($"Inside GetCategories in CategoriesController.");
             if (pageSize > maxCategoriesPageSize)
             {
                 pageSize = maxCategoriesPageSize;
             }
-            var (categoryEntities, paginationMetadata) = await _vastraRepository.GetCategoriesAsync(pageNumber, pageSize);
+            var (categoryEntities, paginationMetadata) = await _vastraRepository
+                .GetCategoriesAsync(pageNumber, pageSize);
 
             _logger.LogInformation($"Total {categoryEntities.Count()} categories fetched in CategoriesController");
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categoryEntities));
         }
+        [HttpHead("{categoryId}")]
         [HttpGet("{categoryId}", Name = "GetCategory")]
         public async Task<IActionResult> GetCategory(int categoryId, bool includeChildCategories = false, 
             bool includeProducts = false)
@@ -230,6 +239,12 @@ namespace Vastra.API.Controllers
                     $"in CategoriesController.");
                 return NotFound();
             }
+            //check if category contains other categories or products
+            if(await _vastraBusinessUtils.CategoryContainsCategoriesOrProducts(categoryId))
+            {
+                throw new CantDeleteResourceContainingChildResourcesException($"Can not" +
+                    $" delete category as it contains products or sub categories.");
+            }
             var categoryToDelete = await _vastraRepository.GetCategoryAsync(categoryId);
             _vastraRepository.DeleteCategory(categoryToDelete);
             await _vastraRepository.SaveChangesAsync();
@@ -258,7 +273,8 @@ namespace Vastra.API.Controllers
 
         [HttpPost("{categoryId}/subCategories")]
         [Authorize(Policy = "MustBeAdmin")]
-        public async Task<ActionResult<CategoryDto>> CreateSubCategory(int categoryId, CategoryForCreationDto subCategory)
+        public async Task<ActionResult<CategoryDto>> CreateSubCategory(int categoryId,
+            CategoryForCreationDto subCategory)
         {
             _logger.LogDebug($"Inside CreateSubCategory in CategoriesController.");
 
@@ -273,10 +289,11 @@ namespace Vastra.API.Controllers
             var finalSubcategory = _mapper.Map<Entities.Category>(subCategory);
             //check if given category name already exists
             if (await _vastraRepository
-                .CategoryExistsWithNameAsync(finalSubcategory.CategoryName.Trim()))
+                .CategoryContainsSubCategoryWithNameAsync(categoryId, finalSubcategory.CategoryName.Trim()))
             {
                 throw new ItemWithNameAlreadyExistsException($"Category with name " +
-                    $"{finalSubcategory.CategoryName} already exists.");
+                    $"{finalSubcategory.CategoryName} already exists as a sub-category in " +
+                    $"category {categoryId}.");
             }
             //set date added  & date modified for new sub category
             finalSubcategory.DateAdded = DateTime.Now;
