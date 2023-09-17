@@ -17,6 +17,8 @@ namespace Vastra.API.Controllers
         private readonly IVastraRepository _vastraRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductsController> _logger;
+        private readonly string uploadPath;
+        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
         const int maxProductsPageSize = 20;
         public ProductsController(IVastraRepository vastraRepository, IMapper mapper,
             ILogger<ProductsController> logger)
@@ -24,6 +26,7 @@ namespace Vastra.API.Controllers
             _vastraRepository = vastraRepository;
             _mapper = mapper;
             _logger = logger;
+            uploadPath = Path.Combine(AppContext.BaseDirectory,"images");
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(int categoryId,
@@ -78,8 +81,8 @@ namespace Vastra.API.Controllers
         }
         [Authorize(Policy = "MustBeAdmin")]
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> CreateProduct(int categoryId,
-            ProductForCreationDto product)
+        public async Task<ActionResult<ProductDto>> CreateProduct(int categoryId,[FromForm]IFormFile imageFile,
+            [FromForm]ProductForCreationDto product)
         {
             _logger.LogDebug($"Inside CreateProduct in ProductsController.");
 
@@ -99,12 +102,40 @@ namespace Vastra.API.Controllers
             }
             var finalProduct = _mapper.Map<Entities.Product>(product);
 
+            //save image in images directory and save image path in db
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("No image file or empty file provided.");
+            }
+
+            // Check if the file extension is allowed
+            var fileExtension = Path.GetExtension(imageFile.FileName).ToLower();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file format. Allowed formats: jpg, jpeg, png.");
+            }
+
+            // Generate a unique filename with SKU
+            string uniqueFileName = finalProduct.SKU + fileExtension;
+
+            string filePath = Path.Combine(uploadPath, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+
             // set date added and date modified for new product
             finalProduct.DateAdded = DateTime.Now;
             finalProduct.DateModified = DateTime.Now;
 
+            //set image path
+            finalProduct.Image = filePath;
+
             _logger.LogDebug($"Updated finalProduct.DateAdded = {finalProduct.DateAdded} " +
                 $"& finalProduct.DateModified = {finalProduct.DateModified} " +
+                $"& finalProduct.Image = {finalProduct.Image}"+
                 $"in CreateProduct() " +
                 $"in ProductsController.");
 
