@@ -23,7 +23,8 @@ namespace Vastra.API.Controllers
         private readonly ILogger<OrdersController> _logger;
         const int maxOrdersPageSize = 20;
 
-        public OrdersController(IVastraRepository vastraRepository, IMapper mapper, ILogger<OrdersController> logger)
+        public OrdersController(IVastraRepository vastraRepository,
+            IMapper mapper, ILogger<OrdersController> logger)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
@@ -31,7 +32,8 @@ namespace Vastra.API.Controllers
         }
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders(int roleId, int userId, int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders(
+            int roleId, int userId, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug($"Inside GetOrders in OrdersController.");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -59,7 +61,8 @@ namespace Vastra.API.Controllers
             {
                 pageSize = maxOrdersPageSize;
             }
-            var (orderEntities, paginationMetadata) = await _vastraRepository.GetOrdersForUserAsync(userId, pageSize, pageNumber);
+            var (orderEntities, paginationMetadata) = await _vastraRepository
+                .GetOrdersForUserAsync(userId, pageNumber, pageSize);
 
             _logger.LogInformation($"Total {orderEntities.Count()} orders fetched for userId {userId} " +
                 $"in OrdersController.");
@@ -73,7 +76,8 @@ namespace Vastra.API.Controllers
         [HttpHead("{orderId}")]
         [HttpGet("{orderId}", Name = "GetOrder")]
         [Authorize]
-        public async Task<IActionResult> GetOrder(int roleId, int userId, int orderId, bool includeCartItems = false )
+        public async Task<IActionResult> GetOrder(int roleId, int userId, int orderId,
+            bool includeCartItems = false )
         {
             _logger.LogDebug($"Inside GetOrder in OrdersController.");
             if (!await _vastraRepository.RoleExistsAsync(roleId))
@@ -122,7 +126,8 @@ namespace Vastra.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<OrderDto>> CreateOrder(int roleId, int userId, OrderForCreationDto order)
+        public async Task<ActionResult<OrderDto>> CreateOrder(int roleId,
+            int userId, OrderForCreationDto order)
         {
             _logger.LogDebug($"Inside CreateOrder in OrdersController.");
             if (!await _vastraRepository.RoleExistsAsync(roleId))

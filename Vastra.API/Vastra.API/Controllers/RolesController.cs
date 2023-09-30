@@ -31,7 +31,7 @@ namespace Vastra.API.Controllers
             _logger.LogInformation($"Total {rolesList.Count()} fetched in RolesController.");
             return Ok(_mapper.Map<IEnumerable<RoleDto>>(rolesList));
         }
-        [HttpHead]
+        [HttpHead("{roleId}")]
         [HttpGet("roleId", Name = "GetRole")]
         public async Task<ActionResult<RoleDto>> GetRole(int roleId)
         {
@@ -48,35 +48,35 @@ namespace Vastra.API.Controllers
             _logger.LogInformation($"Successfully fetched role with id {roleId} in RolesController."); ;
             return _mapper.Map<RoleDto>(role);
         }
-        [HttpPost]
-        public async Task<ActionResult<RoleDto>> CreateRole(RoleForCreationDto role)
-        {
-            _logger.LogDebug($"Inside CreateRole in RolesController.");
-            var finalRole = _mapper.Map<Entities.Role>(role);
-            //set date addedd and date modified for newly created role
-            finalRole.DateAdded = DateTime.Now;
-            finalRole.DateModified = DateTime.Now;
+        //[HttpPost]
+        //public async Task<ActionResult<RoleDto>> CreateRole(RoleForCreationDto role)
+        //{
+        //    _logger.LogDebug($"Inside CreateRole in RolesController.");
+        //    var finalRole = _mapper.Map<Entities.Role>(role);
+        //    //set date addedd and date modified for newly created role
+        //    finalRole.DateAdded = DateTime.Now;
+        //    finalRole.DateModified = DateTime.Now;
 
-            _logger.LogDebug($"Updated finalRole.DateAdded = {finalRole.DateAdded} " +
-                $"& finalRole.DateModified = {finalRole.DateModified} " +
-                $"in CreateRole() " +
-                $"in RolesController.");
+        //    _logger.LogDebug($"Updated finalRole.DateAdded = {finalRole.DateAdded} " +
+        //        $"& finalRole.DateModified = {finalRole.DateModified} " +
+        //        $"in CreateRole() " +
+        //        $"in RolesController.");
 
-            await _vastraRepository.AddRoleAsync(finalRole);
-            await _vastraRepository.SaveChangesAsync();
+        //    await _vastraRepository.AddRoleAsync(finalRole);
+        //    await _vastraRepository.SaveChangesAsync();
 
-            var createdRoleToReturn = _mapper.Map<RoleDto>(finalRole);
+        //    var createdRoleToReturn = _mapper.Map<RoleDto>(finalRole);
 
-            _logger.LogInformation($"Successfully returning created role with id " +
-                $"{createdRoleToReturn.RoleId}.");
+        //    _logger.LogInformation($"Successfully returning created role with id " +
+        //        $"{createdRoleToReturn.RoleId}.");
 
-            return CreatedAtRoute("GetRole",
-                new
-                {
-                    roleId = createdRoleToReturn.RoleId
-                },
-                createdRoleToReturn
-                ); ;
-        }
+        //    return CreatedAtRoute("GetRole",
+        //        new
+        //        {
+        //            roleId = createdRoleToReturn.RoleId
+        //        },
+        //        createdRoleToReturn
+        //        ); ;
+        //}
     }
 }

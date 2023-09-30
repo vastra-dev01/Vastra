@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Vastra.API.Business;
+using Vastra.API.Entities;
 using Vastra.API.Models;
 using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
@@ -17,23 +19,44 @@ namespace Vastra.API.Controllers
         private readonly IVastraRepository _vastraRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductsController> _logger;
+        private readonly IVastraBusinessUtils _vastraBusinessUtils;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+
+        private readonly string uploadPath;
+        private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
         const int maxProductsPageSize = 20;
-        public ProductsController(IVastraRepository vastraRepository, IMapper mapper, ILogger<ProductsController> logger)
+        public ProductsController(IVastraRepository vastraRepository, IMapper mapper,
+            ILogger<ProductsController> logger,
+            IVastraBusinessUtils vastraBusinessUtils,
+            IWebHostEnvironment webHostEnvironment)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
             _logger = logger;
+            _vastraBusinessUtils = vastraBusinessUtils;
+            _webHostEnvironment = webHostEnvironment;
+            uploadPath = Path.Combine(_webHostEnvironment.WebRootPath,"images");
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(int categoryId,
             string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug($"Inside GetProducts in ProductsController.");
+            if (!await _vastraRepository.CategoryExistsAsync(categoryId))
+            {
+                _logger.LogDebug($"Category with id {categoryId} was not found " +
+                    $"in GetProducts() " +
+                    $"in ProductsController.");
+                return NotFound();
+            }
             if (pageSize > maxProductsPageSize)
             {
                 pageSize = maxProductsPageSize;
             }
-            var (productEntities, paginationMetadata) = await _vastraRepository.GetProductsForCategoryAsync(
+            var (productEntities, paginationMetadata) = await _vastraRepository
+                .GetProductsForCategoryAsync(
                 categoryId, name, searchQuery, pageNumber, pageSize);
 
             _logger.LogInformation($"Total {productEntities.Count()} products fetched in ProductsController.");
@@ -90,12 +113,17 @@ namespace Vastra.API.Controllers
             }
             var finalProduct = _mapper.Map<Entities.Product>(product);
 
+            
+
             // set date added and date modified for new product
             finalProduct.DateAdded = DateTime.Now;
             finalProduct.DateModified = DateTime.Now;
 
+            
+
             _logger.LogDebug($"Updated finalProduct.DateAdded = {finalProduct.DateAdded} " +
                 $"& finalProduct.DateModified = {finalProduct.DateModified} " +
+                $"& finalProduct.Image = {finalProduct.Image}"+
                 $"in CreateProduct() " +
                 $"in ProductsController.");
 
@@ -116,6 +144,52 @@ namespace Vastra.API.Controllers
             createdProductToReturn
             );
         }
+        [Authorize(Policy = "MustBeAdmin")]
+        [HttpPost("uploadImage")]
+        public async Task<ActionResult> UploadImage(int categoryId, string SKU, [FromForm] IFormFile imageFile)
+        {
+            _logger.LogDebug($"Inside UploadImage in ProductsController.");
+
+            var category = await _vastraRepository.GetCategoryAsync(categoryId);
+            if (category == null)
+            {
+                _logger.LogDebug($"Category with id {categoryId} was not found " +
+                   $"in UploadImage() " +
+                   $"in ProductsController.");
+                return NotFound();
+            }
+            //check SKU number
+            if (!await _vastraRepository.ProductWithSKUNumberExistsAsync(SKU))
+            {
+                return NotFound($"Product with SKU {SKU} was not found.");
+            }
+            //save image in images directory and save image path in db
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("No image file or empty file provided.");
+            }
+
+            // Check if the file extension is allowed
+            var fileExtension = Path.GetExtension(imageFile.FileName).ToLower();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file format. Allowed formats: jpg, jpeg, png.");
+            }
+
+            // Generate a unique filename with SKU
+            string uniqueFileName = SKU + fileExtension;
+
+            string filePath = Path.Combine(uploadPath, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+            await _vastraBusinessUtils.UpdateProductImage(SKU, filePath);
+
+            return Ok();
+
+        } 
         [Authorize(Policy = "MustBeAdmin")]
         [HttpPut("{productId}")]
         public async Task<ActionResult> UpdateProduct(int categoryId, int productId,

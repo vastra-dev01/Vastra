@@ -79,6 +79,8 @@ namespace Vastra.API.Services
         void DeleteCategory(Category category);
         Task<bool> CategoryExistsAsync(int categoryId);
         Task<bool> CategoryExistsWithNameAsync(string categoryName);
+        Task<bool> CategoryContainsSubCategoriesOrProducts(int categoryId);
+        Task<bool> CategoryContainsSubCategoryWithNameAsync(int categoryId, string categoryName);
 
         #endregion Category
 

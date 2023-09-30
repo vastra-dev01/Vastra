@@ -51,7 +51,8 @@ namespace Vastra.API.Controllers
             claimsForToken.Add(new Claim("phone", user.PhoneNumber));
             claimsForToken.Add(new Claim("email", user.EmailId ?? ""));
 
-            _logger.LogDebug($"Claims set for user with phone number {user.PhoneNumber}. Claims : {claimsForToken.ToString()}");
+            _logger.LogDebug($"Claims set for user with phone number {user.PhoneNumber}." +
+                $" Claims : {claimsForToken.ToString()}");
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],

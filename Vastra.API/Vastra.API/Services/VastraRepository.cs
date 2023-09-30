@@ -572,5 +572,17 @@ namespace Vastra.API.Services
         {
             return await _context.Users.AnyAsync(u => u.PhoneNumber.Equals(phoneNumber));
         }
+
+        public async Task<bool> CategoryContainsSubCategoriesOrProducts(int categoryId)
+        {
+            return await _context.Categories.AnyAsync(c => c.CategoryId == categoryId &&
+            (c.ChildCategories.Count() > 0 || c.Products.Count() > 0));
+        }
+
+        public async Task<bool> CategoryContainsSubCategoryWithNameAsync(int categoryId, string categoryName)
+        {
+            return await _context.Categories.AnyAsync(c => c.CategoryName == categoryName
+             && c.ParentCategoryId == categoryId);
+        }
     }
 }

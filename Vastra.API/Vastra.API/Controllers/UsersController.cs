@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Vastra.API.Business;
 using Vastra.API.Models;
 using Vastra.API.Models.CustomException;
 using Vastra.API.Models.ForCreationAndUpdate;
@@ -17,14 +18,17 @@ namespace Vastra.API.Controllers
         private readonly IVastraRepository _vastraRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<UsersController> _logger;
+        private readonly IVastraBusinessUtils _vastraBusinessUtils;
         const int maxUsersPageSize = 20;
         public UsersController(IVastraRepository vastraRepository,
             IMapper mapper,
-            ILogger<UsersController> logger)
+            ILogger<UsersController> logger,
+            IVastraBusinessUtils vastraBusinessUtils)
         {
             _vastraRepository = vastraRepository;
             _mapper = mapper;
             _logger = logger;
+            _vastraBusinessUtils = vastraBusinessUtils;
         }
         [HttpGet]
         [Authorize(Policy = "MustBeAdmin")]
@@ -32,17 +36,25 @@ namespace Vastra.API.Controllers
             string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogDebug($"Inside GetUsers in UsersController.");
-            if(pageSize > maxUsersPageSize)
+            if (!await _vastraRepository.RoleExistsAsync(roleId))
+            {
+                _logger.LogDebug($"Role with id {roleId} was not found " +
+                    $"in GetUsers() " +
+                    $"in UsersController.");
+                return NotFound();
+            }
+            if (pageSize > maxUsersPageSize)
             {
                 pageSize = maxUsersPageSize;
             }
-            var (userEntities, paginationMetadata) = await _vastraRepository.GetUsersByRoleAsync(roleId, name, searchQuery, pageNumber, pageSize);
+            var (userEntities, paginationMetadata) = await _vastraRepository
+                .GetUsersByRoleAsync(roleId, name, searchQuery, pageNumber, pageSize);
             _logger.LogInformation($"Total {userEntities.Count()} fetched " +
                 $"in UsersController.");
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(_mapper.Map<IEnumerable<UserDto>>(userEntities));
         }
-        [HttpHead]
+        [HttpHead("{userId}")]
         [HttpGet("{userId}", Name = "GetUser")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetUser(int roleId, int userId, bool includeAddresses = false, bool includeOrders = false)
@@ -56,7 +68,8 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            var userEntity = await _vastraRepository.GetUserByRoleAsync(roleId, userId, includeAddresses, includeOrders);
+            var userEntity = await _vastraRepository
+                .GetUserByRoleAsync(roleId, userId, includeAddresses, includeOrders);
             if(userEntity == null)
             {
                 _logger.LogDebug($"User with id {userId} was not found " +
@@ -64,7 +77,7 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            if(!await _vastraRepository.ValidateUserClaim(User, userId))
+            if(!await _vastraRepository.ValidateUserClaim(User, userId) && !User.IsInRole("Admin"))
             {
                 _logger.LogDebug($"User claim failed for userId {userId} " +
                    $"in GetUser() " +
@@ -175,7 +188,7 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId) && !User.IsInRole("Admin"))
             {
                 _logger.LogDebug($"User claim failed for userId {userId} " +
                    $"in UpdateUser() " +
@@ -218,7 +231,7 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId) && !User.IsInRole("Admin"))
             {
                 _logger.LogDebug($"User claim failed for userId {userId} " +
                    $"in PartiallyUpdateUser() " +
@@ -277,12 +290,17 @@ namespace Vastra.API.Controllers
                     $"in UsersController.");
                 return NotFound();
             }
-            if (!await _vastraRepository.ValidateUserClaim(User, userId))
+            if (!await _vastraRepository.ValidateUserClaim(User, userId) && !User.IsInRole("Admin"))
             {
                 _logger.LogDebug($"User claim failed for userId {userId} " +
                    $"in DeleteUser() " +
                    $"in UsersController.");
                 return Forbid();
+            }
+            //check if user is the first admin
+            if(await _vastraBusinessUtils.IsFirstAdmin(userId))
+            {
+                throw new CantDeleteFirstAdminException($"Can not delete the first admin.");
             }
             _vastraRepository.DeleteUser(userToDelete);
             await _vastraRepository.SaveChangesAsync();
