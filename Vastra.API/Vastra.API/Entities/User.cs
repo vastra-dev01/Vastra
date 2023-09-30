@@ -28,6 +28,9 @@ namespace Vastra.API.Entities
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
+
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpires { get; set; }
         public User(string firstName, string? lastName, string phoneNumber, string password)
         {
             FirstName = firstName;

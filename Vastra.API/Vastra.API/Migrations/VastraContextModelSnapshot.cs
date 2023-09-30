@@ -139,61 +139,61 @@ namespace Vastra.API.Migrations
                         {
                             CategoryId = 1,
                             CategoryName = "Men",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5127),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5140)
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(1894),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(1917)
                         },
                         new
                         {
                             CategoryId = 2,
                             CategoryName = "Women",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5141),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5142)
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2012),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2013)
                         },
                         new
                         {
                             CategoryId = 3,
                             CategoryName = "Kids",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5143),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5143)
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2018),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2019)
                         },
                         new
                         {
                             CategoryId = 4,
                             CategoryName = "T Shirts",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5145),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5145),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2022),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2024),
                             ParentCategoryId = 1
                         },
                         new
                         {
                             CategoryId = 5,
                             CategoryName = "Full Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5147),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5147),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2026),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2028),
                             ParentCategoryId = 4
                         },
                         new
                         {
                             CategoryId = 6,
                             CategoryName = "Tops",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5148),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5149),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2030),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2032),
                             ParentCategoryId = 2
                         },
                         new
                         {
                             CategoryId = 7,
                             CategoryName = "French Tops",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5151),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5151),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2034),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2036),
                             ParentCategoryId = 6
                         },
                         new
                         {
                             CategoryId = 8,
                             CategoryName = "Half Sleeve T Shirts",
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5152),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5153),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2038),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2040),
                             ParentCategoryId = 4
                         });
                 });
@@ -308,15 +308,15 @@ namespace Vastra.API.Migrations
                         new
                         {
                             RoleId = 1,
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5265),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5266),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2369),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2372),
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5267),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5268),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2376),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2378),
                             RoleName = "User"
                         });
                 });
@@ -353,6 +353,12 @@ namespace Vastra.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -366,25 +372,27 @@ namespace Vastra.API.Migrations
                         new
                         {
                             UserId = 1,
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5674),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5674),
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2863),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2866),
                             EmailId = "admin@vastra.com",
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "dnaqr7AnyCW9mrq3iyNAcOcCdS9iW3UuVeVbSOYH41g=",
+                            Password = "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=",
                             PhoneNumber = "9661734253",
+                            RefreshTokenExpires = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleId = 1
                         },
                         new
                         {
                             UserId = 2,
-                            DateAdded = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5703),
-                            DateModified = new DateTime(2023, 9, 17, 15, 2, 54, 576, DateTimeKind.Local).AddTicks(5704),
-                            EmailId = "user@vastra.com",
-                            FirstName = "user",
-                            LastName = "user",
-                            Password = "3LaUqgMi8UPtlw4nXIB78SO9XbT3MUC5TMx1f0LcgEM=",
+                            DateAdded = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2956),
+                            DateModified = new DateTime(2023, 9, 30, 17, 30, 19, 468, DateTimeKind.Local).AddTicks(2958),
+                            EmailId = "User1@vastra.com",
+                            FirstName = "Sumit",
+                            LastName = "Ranjan",
+                            Password = "sMkwGjEJzLviG2lXyrFPM2pISrmuqnel/t9MV2Itvs0=",
                             PhoneNumber = "8804225153",
+                            RefreshTokenExpires = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleId = 2
                         });
                 });
