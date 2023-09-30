@@ -69,5 +69,16 @@ namespace Vastra.API.Business
                 return true;
             }
         }
+
+        public async Task UpdateProductImage(string SKU, string path)
+        {
+            var product = await _vastraRepository.GetProductBySKUNumberAsync(SKU);
+            if(product == null)
+            {
+                return;
+            }
+            product.Image = path;
+            await _vastraRepository.SaveChangesAsync();
+        }
     }
 }

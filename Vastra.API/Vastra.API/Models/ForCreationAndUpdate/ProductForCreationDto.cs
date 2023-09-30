@@ -44,11 +44,11 @@ namespace Vastra.API.Models.ForCreationAndUpdate
         [RegularExpression(@"^[1-9]+\d*[\.]{0,1}\d+$", ErrorMessage = "Price Invalid")]
         public float Price { get; set; }
 
-        [RegularExpression(@"^/?[\w-]+(?:/[\w-]+)*\.(png|jpg|jpeg)$", 
-            ErrorMessage = "Image path Invalid. Valid image name/path required ex: " +
-            "'image.png|jpg|jpeg'")]
-        [MaxLength(100, ErrorMessage = "Image path too large")]
-        public string Image { get; set; }
+        //[RegularExpression(@"^/?[\w-]+(?:/[\w-]+)*\.(png|jpg|jpeg)$", 
+        //    ErrorMessage = "Image path Invalid. Valid image name/path required ex: " +
+        //    "'image.png|jpg|jpeg'")]
+        //[MaxLength(100, ErrorMessage = "Image path too large")]
+        //public string Image { get; set; }
 
 
         [Required(ErrorMessage = "Please provide quantity for product")]

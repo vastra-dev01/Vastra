@@ -24,7 +24,7 @@ namespace Vastra.API.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-        [HttpGet("{orders}")]
+        [HttpGet("orders")]
         public async Task<ActionResult<IEnumerable<OrderWithoutCartItemsDto>>> GetOrders(
             int pageNumber = 1, int pageSize = 20)
         {

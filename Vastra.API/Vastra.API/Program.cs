@@ -62,6 +62,7 @@ builder.Services.AddAuthorization(options =>
 });
 var app = builder.Build();
 
+app.UseStaticFiles();
 //add exception handling middleware
 
 app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
