@@ -62,6 +62,13 @@ builder.Services.AddAuthorization(options =>
 });
 var app = builder.Build();
 
+//allow cors
+app.UseCors(builder => builder
+.AllowAnyHeader()
+.AllowAnyMethod()
+.SetIsOriginAllowed((host) => true)
+.AllowCredentials());
+
 app.UseStaticFiles();
 //add exception handling middleware
 
